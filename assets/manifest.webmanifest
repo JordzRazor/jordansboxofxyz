@@ -1,0 +1,12 @@
+{
+  "name": "jordansboxofxyz",
+  "short_name": "jordansbox",
+  "description": "A small shop of interactive three.js and WebGPU pieces.",
+  "start_url": "/index.html",
+  "display": "browser",
+  "background_color": "#0b0d0e",
+  "theme_color": "#0b0d0e",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
