@@ -125,9 +125,12 @@ relay.py --&gt; <b>drops\</b>&lt;ts&gt;-&lt;n&gt;-&lt;slug&gt;.txt    raw text, 
       <h3>Install the userscript</h3>
       <p class="tight">Requires <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>.
       Clicking this opens its install screen:</p>
-      <!-- Relative, not root-absolute: the page has to work whether it is mounted
-           at / on its own app or at /sniper/ inside a larger site. -->
-      <p><a class="btn" href="sniper.user.js">Install sniper.user.js</a></p>
+      <!-- Absolute, and pinned to the /sniper/ mount on purpose. Azure serves
+           /sniper (no trailing slash) as this page WITHOUT redirecting to
+           /sniper/, so a relative href resolves to /sniper.user.js -- one level
+           too high, where navigationFallback answers 200 with the site's HTML.
+           Tampermonkey would then be handed a web page instead of a script. -->
+      <p><a class="btn" href="/sniper/sniper.user.js">Install sniper.user.js</a></p>
       <p>Or, from a copy on disk: Tampermonkey dashboard &rarr; Utilities &rarr; Import from file.</p>
     </li>
 
