@@ -1,7 +1,7 @@
 # Publish this site: rebuild sniper, commit, push, wait for the deploy, prove it landed.
 #
 #   .\publish.ps1 "tweak the hero copy"     build + commit + push + verify
-#   .\publish.ps1 -SkipSniper "css only"    don't touch sniper/
+#   .\publish.ps1 -SkipBuild "css only"     don't rebuild the generated pages
 #   .\publish.ps1 -NoWait "wip"             push and return immediately
 #
 # Deploys run through GitHub Actions (.github/workflows/azure-static-web-apps-
@@ -11,7 +11,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)] [string]$Message = "update site",
-    [switch]$SkipSniper,
+    [switch]$SkipBuild,
     [switch]$NoWait
 )
 
@@ -19,30 +19,52 @@ $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repo = 'JordzRazor/jordansboxofxyz'
 $site = 'https://lemon-plant-0086fdd10.3.azurestaticapps.net'
-# Website building lives in its own folder, deliberately outside the sniper
-# project. build.py there reads sniper.user.js and .sniper_key out of
-# C:\Users\South\sniper, but nothing website-shaped is stored in it.
-$sniperSite = 'C:\Users\South\webbench\sniper-page'
+# Website building lives in its own folder, deliberately outside the projects it
+# publishes. Each page's build.py reads that project's source out of
+# C:\Users\South\<project>, but nothing website-shaped is stored in them.
+$webbench = 'C:\Users\South\webbench'
+$pages = @(
+    @{ Name = 'sniper'; Src = "$webbench\sniper-page"; Dest = 'sniper' },
+    @{ Name = 'zombie'; Src = "$webbench\zombie-page"; Dest = 'zombie' }
+)
 
 Push-Location $here
 try {
-    # --- 1. sniper -------------------------------------------------------
-    # Never hand-copy sniper.user.js: the working copy has the relay key inline
-    # and build.py is what strips it. Copying by hand publishes the key.
-    if (-not $SkipSniper -and (Test-Path (Join-Path $sniperSite 'build.py'))) {
-        Write-Host '== rebuilding sniper ==' -ForegroundColor Cyan
-        python (Join-Path $sniperSite 'build.py')
-        if ($LASTEXITCODE -ne 0) { throw 'build.py failed - nothing published.' }
+    # --- 1. build the generated pages ------------------------------------
+    # Each page builds into its own dist\ and is copied wholesale. Never
+    # hand-copy sniper.user.js: the working copy has the relay key inline and
+    # build.py is what strips it. Copying by hand publishes the key.
+    if (-not $SkipBuild) {
+        foreach ($p in $pages) {
+            if (-not (Test-Path (Join-Path $p.Src 'build.py'))) {
+                Write-Warning "no build.py for $($p.Name) at $($p.Src) - skipping"
+                continue
+            }
+            Write-Host "== rebuilding $($p.Name) ==" -ForegroundColor Cyan
+            python (Join-Path $p.Src 'build.py')
+            if ($LASTEXITCODE -ne 0) { throw "$($p.Name): build.py failed - nothing published." }
 
-        Copy-Item (Join-Path $sniperSite 'dist\index.html')     (Join-Path $here 'sniper\index.html')     -Force
-        Copy-Item (Join-Path $sniperSite 'dist\sniper.user.js') (Join-Path $here 'sniper\sniper.user.js') -Force
+            $dest = Join-Path $here $p.Dest
+            if (-not (Test-Path $dest)) { New-Item -ItemType Directory -Path $dest | Out-Null }
+            Copy-Item (Join-Path $p.Src 'dist\*') $dest -Recurse -Force
+        }
 
-        # Belt and braces: refuse to publish if the live key reached the tree.
+        # Belt and braces: the relay key must never reach the tree, from any
+        # page. Checked across the whole repo, not just sniper\.
         $keyFile = 'C:\Users\South\sniper\.sniper_key'
         if (Test-Path $keyFile) {
             $key = (Get-Content $keyFile -Raw).Trim()
-            $hit = Select-String -Path (Join-Path $here 'sniper\*') -Pattern ([regex]::Escape($key)) -SimpleMatch -Quiet
-            if ($hit) { throw 'ABORT: the sniper relay key is present in sniper\ - refusing to publish.' }
+            # NOT -Quiet. Fed from a pipeline it emits $false once PER FILE, so
+            # you get an Object[] of 19 falses -- and a non-empty array is
+            # truthy, making the guard fire on every run. -List returns the
+            # first match per file and emits nothing at all when clean.
+            $hit = Get-ChildItem $here -Recurse -File |
+                   Where-Object { $_.FullName -notmatch '\\\.git\\' } |
+                   Select-String -Pattern ([regex]::Escape($key)) -SimpleMatch -List |
+                   Select-Object -First 1
+            if ($hit) {
+                throw "ABORT: the sniper relay key is present in $($hit.Path) (line $($hit.LineNumber)) - refusing to publish."
+            }
         }
     }
 
