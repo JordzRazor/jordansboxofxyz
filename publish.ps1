@@ -19,7 +19,10 @@ $ErrorActionPreference = 'Stop'
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repo = 'JordzRazor/jordansboxofxyz'
 $site = 'https://lemon-plant-0086fdd10.3.azurestaticapps.net'
-$sniperSite = 'C:\Users\South\sniper\site'
+# Website building lives in its own folder, deliberately outside the sniper
+# project. build.py there reads sniper.user.js and .sniper_key out of
+# C:\Users\South\sniper, but nothing website-shaped is stored in it.
+$sniperSite = 'C:\Users\South\webbench\sniper-page'
 
 Push-Location $here
 try {
