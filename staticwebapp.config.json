@@ -1,14 +1,37 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/css/*", "/js/*", "/demos/*", "/assets/*", "/*.{png,jpg,gif,svg,ico,json,txt}"]
+    "exclude": ["/css/*", "/js/*", "/demos/*", "/assets/*", "/sniper/*", "/*.{png,jpg,gif,svg,ico,json,txt}"]
   },
+  "routes": [
+    {
+      "route": "/sniper/sniper.user.js",
+      "headers": {
+        "Content-Type": "text/javascript; charset=utf-8",
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/sniper",
+      "redirect": "/sniper/",
+      "statusCode": 301
+    },
+    {
+      "route": "/sniper/*",
+      "headers": {
+        "Cache-Control": "no-cache",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:7355 http://localhost:7355; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+      }
+    }
+  ],
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Cache-Control": "public, max-age=600"
   },
   "mimeTypes": {
-    ".wgsl": "text/plain"
+    ".wgsl": "text/plain",
+    ".js": "text/javascript",
+    ".user.js": "text/javascript"
   }
 }
