@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kessho — jordansboxofxyz</title>
+<meta name="description" content="A slow-turning cluster of crystal shards, three.js + WebGL." />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="demo-body">
+
+<div class="demo-hud">
+  <a class="demo-back" href="../index.html#gallery">← back to the shelf</a>
+  <span class="demo-title">結晶 · Kessho</span>
+</div>
+
+<div class="demo-stage grain-bg">
+  <canvas id="demo-canvas"></canvas>
+</div>
+
+<p class="demo-hint" id="hint">drag to rotate · scroll to zoom · leave it alone and it'll turn on its own</p>
+<div class="demo-fallback-note" id="fallback-note">
+  Your device doesn't seem to support WebGL, so there's nothing to draw here — try a different browser.
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="kessho.js"></script>
+</body>
+</html>
