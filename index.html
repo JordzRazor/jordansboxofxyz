@@ -30,21 +30,57 @@
     <div class="hero-fade" aria-hidden="true"></div>
     <div class="hero-content">
       <p class="eyebrow">開店中 · open for business</p>
-      <h1>A candy shop for people with <em>five minutes</em> to spare.</h1>
-      <p>Small, self-contained three.js and WebGPU pieces you can duck into between things — light enough for an old laptop, quiet enough for a browser tab your manager won't ask about.</p>
+      <h1>Code written in a chat tab, landing in the <em>right file</em> on disk.</h1>
+      <p><strong>Sniper</strong> puts a button on every code block in a browser chat. One click ships it to a relay running on your own machine, which stages it for review before anything touches a file — no copy-paste, no credentials handled, nothing leaving loopback.</p>
       <div style="display:flex; gap:.9rem; flex-wrap:wrap;">
-        <a class="btn" href="#gallery">Step inside</a>
-        <a class="btn ghost" href="#about">What is this place</a>
+        <a class="btn" href="/sniper/">Get sniper</a>
+        <a class="btn ghost" href="#gallery">And the rest of the shop</a>
       </div>
-      <p class="hero-note" style="margin-top:1.6rem;">No accounts. No downloads. Just open a piece and look at it for a while.</p>
+      <p class="hero-note" style="margin-top:1.6rem;">Sniper needs Tampermonkey. Everything else here needs nothing at all.</p>
     </div>
   </section>
+
+  <section class="section" id="workbench">
+    <div class="section-head">
+      <h2>The workbench</h2>
+      <span class="count">the tool the rest of this shop gets built with</span>
+    </div>
+    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
+      Everything further down opens and runs on its own. This one doesn't — it asks for a
+      browser extension before it does anything, because it has to reach a program on your
+      own machine. That's the whole point of it.
+    </p>
+    <div class="gallery">
+
+      <a class="card feature" href="/sniper/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:3.2rem; color:rgba(233,222,200,0.22);" aria-hidden="true">狙撃</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">tool · userscript</span>
+          <h3>Sniper</h3>
+          <p>Code written in a browser chat, landing in the right file on disk — no copy-paste round trip. A "→ Claude" button appears on every code block; one click ships it to a relay running on your own machine, which stages it for review before anything touches a file.</p>
+          <p style="margin-top:.6rem;">No credential ever leaves the browser you're already signed into. The relay binds to loopback only, and drops are staged, never applied blind.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>needs Tampermonkey</span>
+            <span>install →</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
 
   <section class="section" id="gallery">
     <div class="section-head">
       <h2>The shelf</h2>
       <span class="count">2 pieces, more being carved</span>
     </div>
+    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
+      No accounts, no downloads, nothing to install. Just open a piece and look at it for a while.
+    </p>
     <div class="gallery">
 
       <a class="card" href="demos/kessho.html">
@@ -81,38 +117,6 @@
         更に何か、そのうち<br />
         <span style="margin-top:.4rem; display:block;">something else, eventually</span>
       </div>
-
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="section" id="workbench">
-    <div class="section-head">
-      <h2>The workbench</h2>
-      <span class="count">1 tool · the working side of the shop</span>
-    </div>
-    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
-      Everything on the shelf opens and runs. This one doesn't — it's a tool I use to build
-      the other things, and it asks for a browser extension before it does anything. Kept
-      separate for that reason.
-    </p>
-    <div class="gallery">
-
-      <a class="card" href="/sniper/">
-        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">狙撃</span>
-        </div>
-        <div class="card-body">
-          <span class="card-tag">tool · userscript</span>
-          <h3>Sniper</h3>
-          <p>Sends a code block out of a browser chat straight into a file on my own machine, skipping the copy-paste. The relay stays on localhost — this page is just the install and the instructions.</p>
-          <div class="card-foot">
-            <span><span class="status-dot"></span>needs Tampermonkey</span>
-            <span>open →</span>
-          </div>
-        </div>
-      </a>
 
     </div>
   </section>

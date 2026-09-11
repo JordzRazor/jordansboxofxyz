@@ -278,6 +278,23 @@ main{ min-height: 60vh; }
 }
 .card-media canvas{ width:100%; height:100%; display:block; }
 .card-body{ padding: 1.1rem 1.25rem 1.3rem; }
+
+/* The workbench card is the shop's headline item, and it sits alone in its
+   grid. "span 2" is clamped to the single available track on a narrow screen,
+   so this widens it where there is room and changes nothing where there is not.
+   Above 760px it turns side-by-side, which keeps it from becoming a tall
+   column of text on a desktop. */
+.gallery .card.feature{ grid-column: span 2; }
+.gallery .card.feature .card-media{ height: 190px; }
+@media (min-width: 760px){
+  .gallery .card.feature{
+    display: grid;
+    grid-template-columns: minmax(200px, 260px) 1fr;
+    align-items: stretch;
+  }
+  .gallery .card.feature .card-media{ height: 100%; min-height: 210px; }
+  .gallery .card.feature .card-body{ padding: 1.4rem 1.6rem 1.5rem; align-self: center; }
+}
 .card-tag{
   display:inline-block;
   font-size: .68rem;
