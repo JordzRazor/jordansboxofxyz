@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>jordansboxofxyz — a small shop of interactive things</title>
+<meta name="description" content="A small, quiet corner of the internet for three.js and WebGPU experiments. Built to run fine on an old laptop while you've got a few minutes to kill." />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="manifest" href="assets/manifest.webmanifest" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="grain-bg">
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <span class="kanji" aria-hidden="true">箱</span>
+    <span>jordansboxofxyz<span class="sub" style="display:block;">a small shop of interactive things</span></span>
+  </a>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+    <a href="#notice">Support</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-canvas-wrap"><canvas id="hero-canvas" aria-hidden="true"></canvas></div>
+    <div class="hero-fade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">開店中 · open for business</p>
+      <h1>A candy shop for people with <em>five minutes</em> to spare.</h1>
+      <p>Small, self-contained three.js and WebGPU pieces you can duck into between things — light enough for an old laptop, quiet enough for a browser tab your manager won't ask about.</p>
+      <div style="display:flex; gap:.9rem; flex-wrap:wrap;">
+        <a class="btn" href="#gallery">Step inside</a>
+        <a class="btn ghost" href="#about">What is this place</a>
+      </div>
+      <p class="hero-note" style="margin-top:1.6rem;">No accounts. No downloads. Just open a piece and look at it for a while.</p>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <div class="section-head">
+      <h2>The shelf</h2>
+      <span class="count">2 pieces, more being carved</span>
+    </div>
+    <div class="gallery">
+
+      <a class="card" href="demos/kessho.html">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">結晶</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">three.js · WebGL</span>
+          <h3>Kessho</h3>
+          <p>A slow-turning cluster of crystal shards, lit like the inside of a lantern. Drag to rotate, scroll to move closer.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs anywhere</span>
+            <span>open →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="demos/ember.html">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">残り火</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">WebGPU · WGSL</span>
+          <h3>Ember</h3>
+          <p>A bed of coals rendered straight on the GPU with WebGPU. Falls back to a WebGL twin automatically if your browser can't do WebGPU yet.</p>
+          <div class="card-foot">
+            <span><span class="status-dot gpu"></span>WebGPU, with fallback</span>
+            <span>open →</span>
+          </div>
+        </div>
+      </a>
+
+      <div class="card placeholder">
+        更に何か、そのうち<br />
+        <span style="margin-top:.4rem; display:block;">something else, eventually</span>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="about">
+    <div class="about">
+      <div>
+        <h2 style="font-family:var(--font-display); font-size:1.6rem;">What this place is for</h2>
+        <p>This is a small, personal shopfront — not a portfolio, not a product. Just a handful of interactive pieces built to be looked at when the day has a spare corner in it: waiting on a build, waiting on a meeting, waiting on nothing in particular.</p>
+        <p>Nothing here asks you to sign in, install anything, or pay attention for very long. Close the tab whenever.</p>
+      </div>
+      <div class="stat-plate">
+        <ul>
+          <li>Built to be gentle on old and low-end laptops — capped particle counts, capped frame work, everything pauses when the tab isn't visible.</li>
+          <li>WebGPU pieces detect support automatically and quietly fall back to WebGL — nothing ever just breaks.</li>
+          <li>No account system, no tracking beyond basic ad delivery (see below), no dark patterns.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="section" id="notice">
+    <div class="section-head" style="border-bottom:none; margin-bottom:1.2rem;">
+      <h2>Keeping the lights on</h2>
+    </div>
+    <div class="notice-slot wood-panel">
+      <div class="frame" id="ad-slot" data-ad-slot="notice-board-1">
+        <strong>広告 · advertisement space</strong>
+        A small, unobtrusive ad goes here once a network is connected — see the project README for wiring up AdSense or another provider.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>jordansboxofxyz — built with three.js &amp; WebGPU, hosted on Azure Static Web Apps.</span>
+  <span>© <span id="year"></span> Jordan. Come back whenever.</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/main.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
