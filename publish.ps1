@@ -70,7 +70,38 @@ try {
         }
     }
 
-    # --- 2. commit -------------------------------------------------------
+    # --- 2. the canonical host -------------------------------------------
+    # Azure gives every app a *.azurestaticapps.net hostname, will not turn it
+    # off, and staticwebapp.config.json cannot redirect it: routes match on
+    # path, never on host. So the redirect to jordansboxof.xyz is one line of
+    # JavaScript in <head>, injected here rather than pasted into eight pages.
+    # Here, because four of those pages are generated and would lose it on the
+    # next build, and because a page added later would simply forget. It fires
+    # only on the Azure hostname, keeps path + query + hash, and uses
+    # replace() so the ugly URL leaves no history entry to go back to.
+    $canonMark = 'data-canonical-host'
+    $canonTag = @'
+<script data-canonical-host>(function(){var h=location.hostname;if(h!=="jordansboxof.xyz"&&/\.azurestaticapps\.net$/i.test(h)){location.replace("https://jordansboxof.xyz"+location.pathname+location.search+location.hash);}})();</script>
+'@
+    Get-ChildItem $here -Recurse -File -Filter *.html |
+        Where-Object { -not ($_.FullName -like '*\.git\*' -or $_.FullName -like '*\node_modules\*') } |
+        ForEach-Object {
+            $html = [System.IO.File]::ReadAllText($_.FullName)
+            if ($html.Contains($canonMark)) { return }
+            $at = [regex]::Match($html, '<head[^>]*>', 'IgnoreCase')
+            if (-not $at.Success) {
+                Write-Warning "$($_.Name): no <head> - it will serve without the canonical redirect"
+                return
+            }
+            $html = $html.Insert($at.Index + $at.Length, "`n" + $canonTag.TrimEnd())
+            # WriteAllText with a BOM-less UTF8Encoding, NOT Set-Content -Encoding
+            # utf8: in PowerShell 5.1 that writes a BOM, and a BOM in front of
+            # <!doctype> is the first thing the browser reads.
+            [System.IO.File]::WriteAllText($_.FullName, $html, (New-Object System.Text.UTF8Encoding($false)))
+            Write-Host "   canonical redirect -> $($_.FullName.Substring($here.Length + 1))" -ForegroundColor DarkGray
+        }
+
+    # --- 3. commit -------------------------------------------------------
     git add -A
     $staged = git diff --cached --name-only
     if (-not $staged) { Write-Host 'nothing to publish - working tree clean.' -ForegroundColor Yellow; return }
@@ -102,7 +133,7 @@ try {
     Write-Host "pushed $($sha.Substring(0,8))" -ForegroundColor Green
     if ($NoWait) { return }
 
-    # --- 3. wait ---------------------------------------------------------
+    # --- 4. wait ---------------------------------------------------------
     # Key the wait to THIS commit. Asking for "the latest run" right after a
     # push returns the PREVIOUS run -- GitHub has not registered the new one
     # yet -- so it reports the last deploy's success and you believe a deploy
@@ -130,7 +161,7 @@ try {
         throw "deploy did not succeed (status: $(if($status){$status}else{'timed out'})). See https://github.com/$repo/actions"
     }
 
-    # --- 4. prove it -----------------------------------------------------
+    # --- 5. prove it -----------------------------------------------------
     # A green check means the Action ran, not that the bytes changed. Azure's
     # edge can lag a little, so confirm what is actually being served.
     Write-Host '== verifying the live site ==' -ForegroundColor Cyan
