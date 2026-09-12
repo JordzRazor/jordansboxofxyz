@@ -29,6 +29,19 @@
     margin: 3rem 0 1.2rem; padding-bottom:.6rem; border-bottom:1px solid var(--slate-line); }
   h2 .jp{ color: var(--wood-300); font-size:.78em; margin-right:.5rem; }
 
+  /* two ways in, as two counters in the same shop. The first is the one
+     most people want; the second is the original, kept whole for anyone who
+     wants it in their own browser and wants to read every line. */
+  .path{ border:1px solid var(--slate-line); border-radius:var(--radius);
+    background:rgba(20,24,26,0.45); padding:1.4rem clamp(1rem,3vw,1.6rem) 1.6rem; margin:0 0 1.4rem; }
+  .path.rec{ border-color:var(--wood-600); box-shadow: inset 0 1px 0 rgba(216,185,104,0.22), 0 0 0 1px rgba(42,92,176,0.10); }
+  .path h2{ margin:0 0 .9rem; display:flex; align-items:center; gap:.7rem; flex-wrap:wrap; }
+  .path h2 .card-tag{ margin:0; font-family:var(--font-body); }
+  .path .who{ color:var(--paper-dim); font-size:.92rem; max-width:60ch; margin:0 0 1.2rem; }
+  .path .who b{ color:var(--paper); font-weight:600; }
+  .path h3.sub{ font-family:var(--font-display); font-weight:700; font-size:.95rem;
+    color:var(--wood-200); margin:1.6rem 0 .8rem; }
+
   /* three steps, as plaques */
   .steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:1rem; margin:0; padding:0; list-style:none; }
   .steps li{ background:var(--slate-850); border:1px solid var(--slate-line);
@@ -88,48 +101,108 @@
 <div class="wrap">
 
   <p class="eyebrow">狙撃 · sniper</p>
-  <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,4.6vw,2.7rem);margin:0 0 1rem;line-height:1.2;">
-    Code written in a chat tab, landing in the
-    <em style="font-style:normal;color:var(--wood-200);">right file</em> on disk.</h1>
+  <h1 style="font-family:var(--font-display);font-weight:600;font-size:clamp(2.1rem,5vw,3rem);margin:0 0 1rem;line-height:1.14;">
+    <span class="metal">Code written in a chat tab,</span> landing in the
+    <em style="font-weight:500;color:var(--blue-200);">right file</em> on disk.</h1>
 
   <p class="lede">A button on every code block in a browser chat. One click sends it to a small
   program on <strong>your own machine</strong>, which stages it for review before anything
   touches a file.</p>
 
-  <div class="get">
-    <a class="btn big" href="/sniper/sniper-0.35.0.zip" download>Download sniper 0.35.0</a>
-    <span class="getmeta">sniper-0.35.0.zip · <b>155 KB</b> · Windows · open source<br>
-      instructions are inside the zip</span>
-  </div>
+  <p class="lede" style="font-size:.95rem;margin-bottom:1.6rem">It comes two ways. Same relay, same
+  console, same rules about what may touch a file — pick by how much you want to install.</p>
 
-  <div class="needs">
-    <span class="chip"><b>Needs:</b> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">Python 3</a></span>
-    <span class="chip"><b>and:</b> <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a></span>
-    <span class="chip">no admin rights · no UAC</span>
-    <span class="chip">nothing leaves your machine</span>
-  </div>
+  <!-- ===================== path 1: the app ===================== -->
+  <section class="path rec" id="app">
+    <h2><span class="jp">応用</span>The app <span class="card-tag">recommended</span></h2>
+    <p class="who">One folder, one double-click, <b>nothing else to install</b>. One window with tabs:
+    the chat sites hosted inside it with sniper already on every page, the review console as a tab
+    beside them, your environments as tabs too. The relay sits in the tray.</p>
 
-  <h2><span class="jp">手順</span>How it works</h2>
-  <ol class="steps">
-    <li>
-      <span class="n">01</span>
-      <h3>Unzip it anywhere</h3>
-      <p>Drag the folder wherever you like. Then double-click <code>START-HERE.bat</code> — it
-      checks what you need and starts everything.</p>
-    </li>
-    <li>
-      <span class="n">02</span>
-      <h3>Click Install</h3>
-      <p>A tab opens offering a userscript, with your key already in it. Click Install. That is
-      the only setup step you do by hand.</p>
-    </li>
-    <li>
-      <span class="n">03</span>
-      <h3>Open a chat</h3>
-      <p>Go to <code>chat.qwen.ai</code> or <code>chat.deepseek.com</code> and reload. Every code
-      block now has a <code>→ Claude</code> button.</p>
-    </li>
-  </ol>
+    <div class="get">
+      <a class="btn big" href="/sniper/sniperx-1.1.0.zip" download>Download sniperx 1.1.0</a>
+      <span class="getmeta">sniperx-1.1.0.zip · <b>76 MB</b> · Windows 10/11 x64 · open source<br>
+        instructions are inside the zip</span>
+    </div>
+
+    <div class="needs">
+      <span class="chip"><b>Needs:</b> nothing — no Python, no .NET to install</span>
+      <span class="chip">no admin rights · no UAC</span>
+      <span class="chip">nothing leaves your machine</span>
+    </div>
+
+    <h3 class="sub">手順 · How it works</h3>
+    <ol class="steps">
+      <li>
+        <span class="n">01</span>
+        <h3>Unzip it anywhere</h3>
+        <p>Drag the folder wherever you like. It is 76 MB because it carries its own
+        runtime — that is what "nothing else to install" costs.</p>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <h3>Double-click <code>sniperx.exe</code></h3>
+        <p>It makes a key for this machine, starts the relay, sits down in the tray, and asks
+        where you want to be: the sim, the review console, or your own browser.</p>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <h3>Open a chat tab</h3>
+        <p>Qwen, DeepSeek or Kimi, hosted inside the app, buttons already on every code block.
+        No browser extension. Sign in once and stay signed in. <b>+</b> opens another tab; the
+        console is one of them.</p>
+      </li>
+    </ol>
+
+    <div class="note"><b>Prefer your own browser?</b> The app hands it the same userscript the
+    Python version does — install <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer" style="color:var(--wood-300)">Tampermonkey</a>,
+    pick "my browser" at the front door (or the tray menu's install link), click Install when
+    the tab opens, and use the sim or not as you like. Your Chrome extensions can ride along
+    inside the sim too: its "extensions" menu loads any extension from its folder.</div>
+  </section>
+
+  <!-- ===================== path 2: the userscript + Python ===================== -->
+  <section class="path" id="script">
+    <h2><span class="jp">原型</span>The userscript + Python</h2>
+    <p class="who">The original. For people who want it in <b>their own browser</b>, and want to
+    read every line of what is running on their machine — a few Python files, one userscript, and
+    the documentation. Nothing compiled.</p>
+
+    <div class="get">
+      <a class="btn big" href="/sniper/sniper-0.35.0.zip" download>Download sniper 0.35.0</a>
+      <span class="getmeta">sniper-0.35.0.zip · <b>155 KB</b> · Windows · open source<br>
+        instructions are inside the zip</span>
+    </div>
+
+    <div class="needs">
+      <span class="chip"><b>Needs:</b> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">Python 3</a></span>
+      <span class="chip"><b>and:</b> <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a></span>
+      <span class="chip">no admin rights · no UAC</span>
+      <span class="chip">nothing leaves your machine</span>
+    </div>
+
+    <h3 class="sub">手順 · How it works</h3>
+    <ol class="steps">
+      <li>
+        <span class="n">01</span>
+        <h3>Unzip it anywhere</h3>
+        <p>Drag the folder wherever you like. Then double-click <code>START-HERE.bat</code> — it
+        checks what you need and starts everything.</p>
+      </li>
+      <li>
+        <span class="n">02</span>
+        <h3>Click Install</h3>
+        <p>A tab opens offering a userscript, with your key already in it. Click Install. That is
+        the only setup step you do by hand.</p>
+      </li>
+      <li>
+        <span class="n">03</span>
+        <h3>Open a chat</h3>
+        <p>Go to <code>chat.qwen.ai</code> or <code>chat.deepseek.com</code> and reload. Every code
+        block now has a <code>→ Claude</code> button.</p>
+      </li>
+    </ol>
+  </section>
 
   <h2><span class="jp">経路</span>Where the text goes</h2>
   <pre class="flow">your chat tab   --click-->   <b>127.0.0.1:7355</b>   (loopback only, on your PC)
@@ -139,7 +212,8 @@
    +--&gt; prose       --&gt; <b>context</b>     kept as intent, never placed as a file</pre>
   <div class="note"><b>No credential is ever handled.</b> The relay never logs in to anything and
   never touches an API. The browser you are already signed into does the reading, and forwards
-  only the text you point at.</div>
+  only the text you point at. The same is true of the sim: it is a browser view inside the app,
+  and you sign in to the chat site yourself.</div>
 
   <h2><span class="jp">点検</span>Already installed?</h2>
   <div id="check">
@@ -147,15 +221,19 @@
       <button class="btn" id="go" type="button">Check my relay</button>
       <span class="pill">GET <b>127.0.0.1:7355/health</b></span>
     </div>
-    <p id="out">Runs in your browser, against your own machine. Nothing is sent anywhere.</p>
+    <p id="out">Runs in your browser, against your own machine. Nothing is sent anywhere. Works
+for either version — they answer on the same port.</p>
   </div>
 
   <h2><span class="jp">中身</span>What's in the box</h2>
-  <p class="lede" style="font-size:.95rem;margin-bottom:1rem">The zip is the whole thing — the
-  relay, the userscript, the review console, the tests, and the full documentation.
+  <p class="lede" style="font-size:.95rem;margin-bottom:1rem">Either zip is the whole thing — the
+  relay, the userscript, the review console, and the full documentation.
   <code style="color:var(--wood-200)">INSTALL.txt</code> is the short version;
   <code style="color:var(--wood-200)">README.md</code> is the real one: why it works this way,
-  what the safety properties are, how to point it at a chat site it has never seen.</p>
+  what the safety properties are, how to point it at a chat site it has never seen. The Python
+  zip also carries the tests. The app's relay and queue are C#; the judgement about text lives in
+  <code style="color:var(--wood-200)">snipercore.dll</code>, C++ measured against the Python
+  original line for line.</p>
   <p class="lede" style="font-size:.95rem">It reads code blocks other tools can't, too — Qwen
   renders code into a full editor rather than as text, so only the lines on screen exist at all.
   Sniper asks the editor instead of scraping the screen, and refuses a partial capture rather
@@ -165,9 +243,9 @@
 </main>
 
 <footer class="site-footer">
-  <span>sniper 0.35.0 — the relay stays on your machine. This page carries the
-  download and nothing else; it never carries your key, and the build refuses to ship if it
-  finds one.</span>
+  <span>sniperx 1.1.0 · sniper 0.35.0 — the relay stays on your machine.
+  This page carries the downloads and nothing else; it never carries your key, and the build
+  refuses to ship if it finds one.</span>
   <span><a href="/">← back to the shop</a></span>
 </footer>
 
