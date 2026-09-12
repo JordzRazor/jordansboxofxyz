@@ -117,7 +117,11 @@ try {
     # A green check means the Action ran, not that the bytes changed. Azure's
     # edge can lag a little, so confirm what is actually being served.
     Write-Host '== verifying the live site ==' -ForegroundColor Cyan
-    foreach ($path in @('/', '/sniper/', '/sniper/sniper.user.js')) {
+    # three.module.js is in here on purpose: if /zombie/* ever falls out of
+    # navigationFallback.exclude it comes back 200 as text/html instead of
+    # 404ing, and the game dies on a content-type error. Watch the type, not
+    # just the status.
+    foreach ($path in @('/', '/sniper/', '/sniper/sniper.user.js', '/zombie/', '/zombie/three.module.js')) {
         try {
             $r = Invoke-WebRequest "$site$path" -UseBasicParsing -TimeoutSec 20
             "   {0,-26} {1}  {2} B  {3}" -f $path, $r.StatusCode, $r.RawContentLength, $r.Headers['Content-Type']
