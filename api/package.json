@@ -1,0 +1,13 @@
+{
+  "name": "jordansboxofxyz-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The download gate: sign in, agree to the terms, get a short-lived link.",
+  "main": "src/functions/*.js",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@azure/data-tables": "^13.3.0",
+    "@azure/functions": "^4.6.0",
+    "@azure/storage-blob": "^12.26.0"
+  }
+}

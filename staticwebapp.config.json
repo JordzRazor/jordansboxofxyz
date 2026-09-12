@@ -11,7 +11,9 @@
       "/zombie/*",
       "/rougelike/*",
       "/grip/*",
-      "/*.{png,jpg,gif,svg,ico,json,txt}"
+      "/*.{png,jpg,gif,svg,ico,json,txt}",
+      "/terms/*",
+      "/api/*"
     ]
   },
   "routes": [
@@ -28,13 +30,6 @@
       }
     },
     {
-      "route": "/sniper/sniper.user.js",
-      "headers": {
-        "Content-Type": "text/javascript; charset=utf-8",
-        "Cache-Control": "no-cache"
-      }
-    },
-    {
       "route": "/sniper",
       "redirect": "/sniper/",
       "statusCode": 301
@@ -43,7 +38,19 @@
       "route": "/sniper/*",
       "headers": {
         "Cache-Control": "no-cache",
-        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://127.0.0.1:7355 http://localhost:7355; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://127.0.0.1:7355 http://localhost:7355; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+      }
+    },
+    {
+      "route": "/terms/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/api/*",
+      "headers": {
+        "Cache-Control": "no-store"
       }
     }
   ],
@@ -57,5 +64,8 @@
     ".js": "text/javascript",
     ".user.js": "text/javascript",
     ".zip": "application/zip"
+  },
+  "platform": {
+    "apiRuntime": "node:20"
   }
 }

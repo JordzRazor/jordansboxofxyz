@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>jordansboxofxyz — a small shop of interactive things</title>
-<meta name="description" content="A small, quiet shop of games that run in the browser and tools that run on your machine. Free, open source, nothing to sign into." />
+<meta name="description" content="A small, quiet shop of games that run in the browser and tools that run on your machine. Free to play; sign in once to download." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="manifest" href="assets/manifest.webmanifest" />
 <link rel="stylesheet" href="css/style.css?v=2302db0d" />
@@ -21,6 +21,7 @@
     <a href="#pipeline">How it's made</a>
     <a href="#about">About</a>
     <a href="#notice">Support</a>
+    <span id="auth-slot"></span>
   </nav>
 </header>
 
@@ -31,14 +32,14 @@
     <div class="hero-content">
       <p class="eyebrow">開店中 · open for business · 気</p>
       <h1><span class="metal">A small shop</span> of things to <em>play</em> and things to <em>download</em>.</h1>
-      <p>Games that run in the browser. Tools that run on your own machine. Nothing to sign into, nothing watching you, all of it open source.</p>
+      <p>Games that run in the browser. Tools that run on your own machine. Nothing to sign into to play; one sign-in to download, and the source comes with it.</p>
       <div style="display:flex; gap:.9rem; flex-wrap:wrap;">
         <a class="btn" href="#gallery">Browse the shelf</a>
         <a class="btn ghost" href="#pipeline">How it's made</a>
       </div>
       <ul class="hero-stats">
-        <li><b>Open source</b> · read every line</li>
-        <li><b>No account</b>, no telemetry</li>
+        <li><b>Source included</b> · read every line</li>
+        <li><b>No account to play</b> · one to download</li>
         <li>Runs fine on <b>an old laptop</b></li>
       </ul>
     </div>
@@ -207,15 +208,15 @@
   <section class="section" id="notice">
     <div class="section-head" style="border-bottom:none; margin-bottom:1.2rem;">
       <h2>Keeping the lights on</h2>
-      <span class="count">everything here is free and open source</span>
+      <span class="count">everything here is free to play; the source ships with the tools</span>
     </div>
     <div class="tipjar wood-panel">
       <div class="tipjar-text">
         <span class="jp" aria-hidden="true">御礼</span>
         <h3>You like? Give money and I will build more tools.</h3>
-        <p>That is the whole pitch. Nothing here is behind a login or a paywall, and the source is
-        in the zip, so the only way to say thanks is to throw some cheddar in the jar. Tips go
-        straight back into evenings spent building the next thing on the shelf.</p>
+        <p>That is the whole pitch. Nothing here costs anything, and the source is in the zip,
+        so the only way to say thanks is to throw some cheddar in the jar. Tips go straight back
+        into evenings spent building the next thing on the shelf.</p>
       </div>
       <a class="btn" href="https://coff.ee/youspiritually" target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
     </div>
@@ -230,11 +231,12 @@
 
 <footer class="site-footer">
   <span>jordansboxofxyz — built with three.js &amp; WebGPU, hosted on Azure Static Web Apps.</span>
-  <span>© <span id="year"></span> Jordan. Come back whenever.</span>
+  <span>© <span id="year"></span> Jordan Young-Noel. Built with Claude. <a href="/terms/">The terms</a>. Come back whenever.</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/auth.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

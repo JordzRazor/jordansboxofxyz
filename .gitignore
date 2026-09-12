@@ -1,3 +1,6 @@
 .swa_token
 *.swa_token
 .env
+sniper/*.zip
+sniper/sniper.user.js
+api/node_modules/

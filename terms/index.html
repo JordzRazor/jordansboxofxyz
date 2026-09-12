@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>the terms · jordansboxofxyz</title>
+<meta name="description" content="Sign in and agree to the terms to download from the shop.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="stylesheet" href="/css/style.css?v=2302db0d">
+<style>
+  .wrap{ max-width: 52rem; margin: 0 auto; padding: clamp(2rem,5vw,3.2rem) clamp(1.25rem,4vw,3rem) 4rem; }
+  h1{ font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem,4.4vw,2.6rem); margin: 0 0 .6rem; line-height: 1.14; }
+  .lede{ color: var(--paper-dim); max-width: 56ch; margin: 0 0 1.6rem; }
+  .state{ border:1px solid var(--slate-line); border-radius: var(--radius); background: var(--slate-850); padding: 1.1rem 1.3rem; margin: 0 0 1.6rem; }
+  .state b{ color: var(--wood-200); }
+  .providers{ display:flex; gap:.8rem; flex-wrap:wrap; }
+  .terms{ border:1px solid var(--slate-line); border-radius: var(--radius); background: rgba(20,24,26,0.45); padding: 1.4rem clamp(1rem,3vw,1.8rem); }
+  .terms h2{ font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 1.4rem 0 .5rem; color: var(--wood-200); }
+  .terms h2:first-child{ margin-top: 0; }
+  .terms p, .terms li{ color: var(--paper-dim); font-size: .93rem; }
+  .terms .ver{ color: var(--paper-faint); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+  .agree{ display:flex; gap:.9rem; align-items:flex-start; margin: 1.4rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--slate-line); }
+  .agree input{ width: 1.1rem; height: 1.1rem; margin-top: .2rem; accent-color: var(--wood-400); }
+  .agree label{ color: var(--paper); font-size: .95rem; }
+  .row{ display:flex; gap:.9rem; align-items:center; flex-wrap:wrap; margin-top: 1.1rem; }
+  .btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; filter:none; }
+  .muted{ color: var(--paper-faint); font-size: .82rem; }
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body class="grain-bg">
+
+<header class="site-header">
+  <a class="brand" href="/">
+    <span class="kanji" aria-hidden="true">箱</span>
+    <span>jordansboxofxyz<span class="sub" style="display:block;">a small shop of interactive things</span></span>
+  </a>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="/#gallery">Shelf</a>
+    <a href="/#pipeline">How it's made</a>
+    <a href="/#about">About</a>
+    <a href="/#notice">Support</a>
+    <span id="auth-slot"></span>
+  </nav>
+</header>
+
+<main>
+<div class="wrap">
+  <p class="eyebrow">約束 · the terms</p>
+  <h1><span class="metal">Look all you like.</span> To take something home, sign in and agree.</h1>
+  <p class="lede">Everything on the shelf can be played and tried without an account. Downloading the tools
+  asks for one thing: that you agree, on the record, to the terms below.</p>
+
+  <div class="state" id="state">
+    <span class="muted">checking who you are…</span>
+  </div>
+
+  <section class="terms" id="terms">
+    <div class="ver">terms · version <span id="ver">2026-09-12</span></div>
+
+    <h2>Whose it is</h2>
+    <p>Everything you can download here — sniper, its source, the application, the userscript, and
+    the games and tools that follow — is the work and property of <b>Jordan Young-Noel</b>, built
+    with Claude. All rights are reserved. Copyright in it lasts for the author's life and seventy
+    years after, and these terms last as long as the copyright does.</p>
+
+    <h2>What you may do</h2>
+    <ul>
+      <li>Download it, install it, run it, and use it for your own work.</li>
+      <li>Read every line of the source. It ships in the zip so that you can.</li>
+      <li>Change it for your own use, on your own machines.</li>
+    </ul>
+
+    <h2>What you may not do</h2>
+    <ul>
+      <li>Redistribute it, in whole or in part, in any form — the zip, the binaries, or the source,
+      original or modified.</li>
+      <li>Publish it, sell it, or offer it as your own or as part of another product or project.</li>
+      <li>Copy code, designs, or text out of it into other software, whether or not that software
+      is open source.</li>
+      <li>Remove or alter the notices of who made it.</li>
+    </ul>
+    <p>Source you can read is not source you own. This is <b>source-available</b>, not open source.</p>
+
+    <h2>The record</h2>
+    <p>When you tick the box, this site writes down the account you signed in with (the provider and
+    its id, and the name or email that provider gives us), the version of these terms you were shown,
+    the time, your network address and browser. Each download is written down the same way. That
+    record is kept for as long as copyright in the work subsists. If the work turns up somewhere it
+    should not, the record is how the breach is traced.</p>
+
+    <h2>If the terms are broken</h2>
+    <p>Your permission to use the work ends, and the record is evidence. Nothing here limits any other
+    right the author has.</p>
+
+    <h2>No promises</h2>
+    <p>It is provided as it is. It reads the page you point it at and writes files where you tell it
+    to; use it with care, and keep backups, as it does.</p>
+
+    <h2>Changes</h2>
+    <p>New terms get a new version and ask for a new agreement. Old acceptances stay on record.</p>
+
+    <div class="agree" id="agree" hidden>
+      <input type="checkbox" id="tick">
+      <label for="tick">I have read the terms above, I agree to them, and I understand that my
+      agreement and my downloads are recorded under the account I signed in with.</label>
+    </div>
+    <div class="row" id="go" hidden>
+      <button class="btn" id="continue" type="button" disabled>Agree and continue</button>
+      <span class="muted" id="msg"></span>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="site-footer">
+  <span>© <span id="year"></span> Jordan Young-Noel. Built with Claude. All rights reserved.</span>
+  <span><a href="/">← back to the shop</a></span>
+</footer>
+
+<script src="/js/auth.js"></script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+const params = new URLSearchParams(location.search);
+const next = params.get('next') || '/sniper/';
+const safeNext = /^\/[^\/\\]/.test(next) ? next : '/sniper/';
+const state = document.getElementById('state');
+const agree = document.getElementById('agree');
+const go = document.getElementById('go');
+const tick = document.getElementById('tick');
+const btn = document.getElementById('continue');
+const msg = document.getElementById('msg');
+const back = encodeURIComponent('/terms/?next=' + encodeURIComponent(safeNext));
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+
+fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
+  document.getElementById('ver').textContent = me.terms;
+  if (!me.signedIn) {
+    state.innerHTML = '<p style="margin:0 0 .9rem"><b>Step one:</b> sign in. No password is made here — '
+      + 'GitHub or Microsoft vouches for you, and this site keeps only the account id and the name it hands over.</p>'
+      + '<div class="providers">'
+      + '<a class="btn" href="/.auth/login/github?post_login_redirect_uri=' + back + '">Sign in with GitHub</a>'
+      + '<a class="btn ghost" href="/.auth/login/aad?post_login_redirect_uri=' + back + '">Sign in with Microsoft</a>'
+      + '</div>';
+    return;
+  }
+  if (me.accepted) {
+    state.innerHTML = '<p style="margin:0"><b>You are in.</b> Signed in as ' + esc(me.name || me.provider)
+      + ', agreed on ' + esc((me.acceptedUtc || '').slice(0, 10)) + '. '
+      + '<a class="btn" style="margin-left:.8rem" href="' + esc(safeNext) + '">Continue</a></p>';
+    return;
+  }
+  state.innerHTML = '<p style="margin:0"><b>Step two:</b> you are signed in as ' + esc(me.name || me.provider)
+    + '. Read the terms, tick the box, continue.</p>';
+  agree.hidden = false;
+  go.hidden = false;
+  tick.addEventListener('change', () => { btn.disabled = !tick.checked; });
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    msg.textContent = 'recording…';
+    try {
+      const r = await fetch('/api/accept', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                             body: JSON.stringify({ agree: true, version: me.terms }) });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+      msg.textContent = 'recorded. taking you on…';
+      location.href = safeNext;
+    } catch (e) {
+      msg.textContent = 'could not record that: ' + e.message;
+      btn.disabled = false;
+    }
+  });
+}).catch(() => { state.innerHTML = '<span class="muted">could not reach the sign-in service. try again in a moment.</span>'; });
+</script>
+</body>
+</html>
