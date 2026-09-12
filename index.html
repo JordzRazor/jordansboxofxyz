@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>jordansboxofxyz — a small shop of interactive things</title>
-<meta name="description" content="A small, quiet corner of the internet for three.js and WebGPU experiments. Built to run fine on an old laptop while you've got a few minutes to kill." />
+<meta name="description" content="A small, quiet shop of games that run in the browser and tools that run on your machine. Free, open source, nothing to sign into." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="manifest" href="assets/manifest.webmanifest" />
 <link rel="stylesheet" href="css/style.css" />
@@ -17,9 +17,8 @@
     <span>jordansboxofxyz<span class="sub" style="display:block;">a small shop of interactive things</span></span>
   </a>
   <nav class="site-nav" aria-label="Primary">
-    <a href="#workbench">Workbench</a>
+    <a href="#gallery">Shelf</a>
     <a href="#pipeline">How it's made</a>
-    <a href="#gallery">Gallery</a>
     <a href="#about">About</a>
     <a href="#notice">Support</a>
   </nav>
@@ -31,103 +30,86 @@
     <div class="hero-fade" aria-hidden="true"></div>
     <div class="hero-content">
       <p class="eyebrow">開店中 · open for business · 気</p>
-      <h1><span class="metal">Code written in a chat tab,</span> landing in the <em>right file</em> on disk.</h1>
-      <p><strong>Sniper</strong> puts a button on every code block in a browser chat. One click ships it to a relay running on your own machine, which stages it for review before anything touches a file — no copy-paste, no credentials handled, nothing leaving loopback.</p>
-      <p>Now an app as well: one folder, one double-click, the chat hosted inside it in tabs with sniper already on every page. Nothing else to install.</p>
+      <h1><span class="metal">A small shop</span> of things to <em>play</em> and things to <em>download</em>.</h1>
+      <p>Games that run in the browser. Tools that run on your own machine. Nothing to sign into, nothing watching you, all of it open source.</p>
       <div style="display:flex; gap:.9rem; flex-wrap:wrap;">
-        <a class="btn" href="/sniper/">Get sniper</a>
-        <a class="btn ghost" href="#gallery">And the rest of the shop</a>
+        <a class="btn" href="#gallery">Browse the shelf</a>
+        <a class="btn ghost" href="#pipeline">How it's made</a>
       </div>
       <ul class="hero-stats">
-        <li><b>Open source</b> · download and read it</li>
-        <li><b>Loopback only</b> · nothing leaves your machine</li>
-        <li><b>No account</b>, no sign-in, no telemetry</li>
+        <li><b>Open source</b> · read every line</li>
+        <li><b>No account</b>, no telemetry</li>
         <li>Runs fine on <b>an old laptop</b></li>
       </ul>
-      <p class="hero-note" style="margin-top:1.2rem;">The app needs nothing. The userscript version needs Tampermonkey. Everything else here needs nothing at all.</p>
     </div>
   </section>
 
-  <section class="section" id="workbench">
+  <section class="section" id="gallery">
     <div class="section-head">
-      <h2>The workbench</h2>
-      <span class="count">the tool the rest of this shop gets built with</span>
+      <h2>The shelf</h2>
+      <span class="count">6 pieces, more being carved</span>
     </div>
-    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
-      Everything further down opens and runs on its own. This one doesn't — it asks for a
-      browser extension before it does anything, because it has to reach a program on your
-      own machine. That's the whole point of it.
-    </p>
     <div class="gallery">
 
-      <a class="card feature" href="/sniper/">
+      <a class="card" href="/sniper/">
         <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display); font-size:3.2rem; color:rgba(233,222,200,0.22);" aria-hidden="true">狙撃</span>
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">狙撃</span>
         </div>
         <div class="card-body">
-          <span class="card-tag">tool · app + userscript</span>
+          <span class="card-tag">tool · download</span>
           <h3>Sniper</h3>
-          <p>Code written in a browser chat, landing in the right file on disk — no copy-paste round trip. A "→ Claude" button appears on every code block; one click ships it to a relay running on your own machine, which stages it for review before anything touches a file.</p>
-          <p style="margin-top:.6rem;">Two ways in. The app: unzip, double-click, and the chat opens in a tab inside it with the buttons already there — nothing else to install. The original: a userscript in your own browser and a few Python files you can read line by line.</p>
-          <p style="margin-top:.6rem;">No credential ever leaves the browser you're signed into. The relay binds to loopback only, and drops are staged, never applied blind.</p>
+          <p>Code written in a browser chat, landing in the right file on your disk. One app, or a userscript for your own browser.</p>
           <div class="card-foot">
-            <span><span class="status-dot"></span>the app needs nothing to install</span>
+            <span><span class="status-dot"></span>Windows · nothing else to install</span>
             <span>download →</span>
           </div>
         </div>
       </a>
 
-    </div>
-  </section>
+      <a class="card" href="/grip/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">握</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag made">built with sniper</span>
+          <h3>Grip</h3>
+          <p>Drift in zero gravity inside a performance governor arguing with itself. WASD, QE, arrows.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs anywhere</span>
+            <span>play →</span>
+          </div>
+        </div>
+      </a>
 
-  <div class="divider"></div>
+      <a class="card" href="/rougelike/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">迷宮</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag made">built with sniper</span>
+          <h3>Infinite Dungeon</h3>
+          <p>A roguelike that keeps generating corridor as you walk. Click to enter, WASD to move, Esc to let go.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs anywhere</span>
+            <span>play →</span>
+          </div>
+        </div>
+      </a>
 
-  <section class="section" id="pipeline">
-    <div class="section-head">
-      <h2>How a thing on the shelf gets made</h2>
-      <span class="count">the short version</span>
-    </div>
-    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
-      Three of the pieces below were built this way end to end — written in a chat,
-      placed on disk by the relay, never copy-pasted. Nothing reached a file without
-      being looked at first.
-    </p>
-    <div class="pipeline">
-      <div class="pipe-step">
-        <span class="jp">問答</span>
-        <h4>Ask in a chat</h4>
-        <p>Describe the change in a browser chat tab you're already signed into.</p>
-      </div>
-      <div class="pipe-step">
-        <span class="jp">狙撃</span>
-        <h4>Snipe the block</h4>
-        <p>One click on the code block sends it to a relay on your own machine.</p>
-      </div>
-      <div class="pipe-step">
-        <span class="jp">検分</span>
-        <h4>Review it</h4>
-        <p>It's staged, not applied. You decide where it lands — with a backup and a ledger entry.</p>
-      </div>
-      <div class="pipe-step end">
-        <span class="jp">完成</span>
-        <h4>Play it</h4>
-        <p>Reload. Every sealed piece below came out of exactly this loop.</p>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="section" id="gallery">
-    <div class="section-head">
-      <h2>The shelf</h2>
-      <span class="count">5 pieces, more being carved</span>
-    </div>
-    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
-      No accounts, no downloads, nothing to install. Just open a piece and look at it for a while.
-      The ones carrying a red seal were built through sniper.
-    </p>
-    <div class="gallery">
+      <a class="card" href="/zombie/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">屍</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag made">built with sniper</span>
+          <h3>Zombie.FPS</h3>
+          <p>A first-person shooter with shambling things in it. Click to capture the mouse, WASD to move.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs anywhere</span>
+            <span>play →</span>
+          </div>
+        </div>
+      </a>
 
       <a class="card" href="demos/kessho.html">
         <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
@@ -136,7 +118,7 @@
         <div class="card-body">
           <span class="card-tag">three.js · WebGL</span>
           <h3>Kessho</h3>
-          <p>A slow-turning cluster of crystal shards, lit like the inside of a lantern. Drag to rotate, scroll to move closer.</p>
+          <p>A slow-turning cluster of crystal shards, lit like the inside of a lantern. Drag, scroll.</p>
           <div class="card-foot">
             <span><span class="status-dot"></span>runs anywhere</span>
             <span>open →</span>
@@ -151,66 +133,9 @@
         <div class="card-body">
           <span class="card-tag">WebGPU · WGSL</span>
           <h3>Ember</h3>
-          <p>A bed of coals rendered straight on the GPU with WebGPU. Falls back to a WebGL twin automatically if your browser can't do WebGPU yet.</p>
+          <p>A bed of coals rendered straight on the GPU. Falls back to WebGL on its own.</p>
           <div class="card-foot">
             <span><span class="status-dot gpu"></span>WebGPU, with fallback</span>
-            <span>open →</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="card" href="/zombie/">
-        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">屍</span>
-        </div>
-        <div class="card-body">
-          <span class="card-tag made">built with sniper</span>
-          <h3>Zombie.FPS</h3>
-          <p>A first-person shooter with shambling things in it. Click once to capture the mouse, WASD to move, Esc to let go.</p>
-          <div class="made-note">
-            <span class="seal" aria-hidden="true">狙</span>
-            <span>Written in a chat window, placed on disk by the relay, never copy-pasted.</span>
-          </div>
-          <div class="card-foot">
-            <span><span class="status-dot"></span>runs anywhere</span>
-            <span>open →</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="card" href="/rougelike/">
-        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">迷宮</span>
-        </div>
-        <div class="card-body">
-          <span class="card-tag made">built with sniper</span>
-          <h3>Infinite Dungeon</h3>
-          <p>A grid-based roguelike that keeps generating corridor as you walk. Click to enter, WASD to move, mouse to look, Esc to let go.</p>
-          <div class="made-note">
-            <span class="seal" aria-hidden="true">狙</span>
-            <span>Built the same way, and still being built — the newest piece here.</span>
-          </div>
-          <div class="card-foot">
-            <span><span class="status-dot"></span>runs anywhere</span>
-            <span>open →</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="card" href="/grip/">
-        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">握</span>
-        </div>
-        <div class="card-body">
-          <span class="card-tag made">built with sniper</span>
-          <h3>Grip</h3>
-          <p>Drift in zero gravity through a dozen meshes melting themselves with per-vertex trig. When the frame budget slips, the sim freezes one — grips it — and lets one go once there is headroom again. You are flying around inside a performance governor watching it argue with itself. WASD to thrust, QE for vertical, arrows to turn.</p>
-          <div class="made-note">
-            <span class="seal" aria-hidden="true">狙</span>
-            <span>The first piece here written through Kimi, sniped straight off the chat page.</span>
-          </div>
-          <div class="card-foot">
-            <span><span class="status-dot"></span>runs anywhere</span>
             <span>open →</span>
           </div>
         </div>
@@ -226,18 +151,52 @@
 
   <div class="divider"></div>
 
+  <section class="section" id="pipeline">
+    <div class="section-head">
+      <h2>How a thing on the shelf gets made</h2>
+      <span class="count">the short version</span>
+    </div>
+    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
+      The pieces with a red seal were written in a chat and placed on disk by sniper. Nothing reached a file without being looked at first.
+    </p>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <span class="jp">問答</span>
+        <h4>Ask</h4>
+        <p>Describe it in a chat tab.</p>
+      </div>
+      <div class="pipe-step">
+        <span class="jp">狙撃</span>
+        <h4>Snipe</h4>
+        <p>One click sends the code block to your own machine.</p>
+      </div>
+      <div class="pipe-step">
+        <span class="jp">検分</span>
+        <h4>Review</h4>
+        <p>Staged, backed up, ledgered. You decide where it lands.</p>
+      </div>
+      <div class="pipe-step end">
+        <span class="jp">完成</span>
+        <h4>Play</h4>
+        <p>Reload. It is on the shelf.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <section class="section" id="about">
     <div class="about">
       <div>
         <h2 style="font-family:var(--font-display); font-size:1.6rem;">What this place is for</h2>
-        <p>This is a small, personal shopfront — not a portfolio, not a product. Just a handful of interactive pieces built to be looked at when the day has a spare corner in it: waiting on a build, waiting on a meeting, waiting on nothing in particular.</p>
-        <p>Nothing here asks you to sign in, install anything, or pay attention for very long. Close the tab whenever.</p>
+        <p>A personal shopfront, not a product. A handful of things to look at when the day has a spare corner in it, and a few tools that came out of making them.</p>
+        <p>Nothing here asks you to sign in or pay attention for long. Close the tab whenever.</p>
       </div>
       <div class="stat-plate">
         <ul>
-          <li>Built to be gentle on old and low-end laptops — capped particle counts, capped frame work, everything pauses when the tab isn't visible.</li>
-          <li>WebGPU pieces detect support automatically and quietly fall back to WebGL — nothing ever just breaks.</li>
-          <li>No account system, no tracking beyond basic ad delivery (see below), no dark patterns.</li>
+          <li>Gentle on old laptops: capped particle counts, and everything pauses when the tab is hidden.</li>
+          <li>WebGPU pieces fall back to WebGL on their own. Nothing just breaks.</li>
+          <li>No accounts, no tracking, no dark patterns.</li>
         </ul>
       </div>
     </div>
@@ -263,7 +222,7 @@
     <div class="notice-slot wood-panel" style="margin-top:1.2rem;">
       <div class="frame" id="ad-slot" data-ad-slot="notice-board-1">
         <strong>広告 · advertisement space</strong>
-        A small, unobtrusive ad goes here once a network is connected — see the project README for wiring up AdSense or another provider.
+        A small, unobtrusive ad goes here once a network is connected.
       </div>
     </div>
   </section>
