@@ -477,6 +477,27 @@ main{ min-height: 60vh; }
 .stat-plate li{ margin-bottom: .5rem; }
 .stat-plate li:last-child{ margin-bottom:0; }
 
+/* ---------- the tip jar ----------
+   Everything in the shop is free and the source ships in the zip, so this is
+   the one place gratitude has anywhere to go. A plaque, a line, a button. */
+.tipjar{
+  border-radius: var(--radius);
+  padding: 1.5rem clamp(1.2rem, 3vw, 2rem);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.4rem 2rem; flex-wrap: wrap;
+}
+.tipjar-text{ max-width: 46rem; }
+.tipjar .jp{
+  font-family: var(--font-display); font-size: .8rem; letter-spacing: .12em;
+  color: var(--wood-300);
+}
+.tipjar h3{
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem); margin: .3rem 0 .5rem; line-height: 1.25;
+}
+.tipjar p{ margin: 0; color: var(--paper-dim); font-size: .9rem; }
+.tipjar .btn{ flex: none; white-space: nowrap; }
+
 /* ---------- ad slot: styled as a hung wooden noticeboard ---------- */
 .notice-slot{
   border-radius: var(--radius);
