@@ -3,108 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>sniper — setup · jordansboxofxyz</title>
-<meta name="description" content="Install and set up sniper: ship text out of a web chat into a local staging area on your own machine.">
+<title>sniper — download · jordansboxofxyz</title>
+<meta name="description" content="Code written in a browser chat, landing in the right file on disk. Download, unzip, double-click. Open source.">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <link rel="manifest" href="/assets/manifest.webmanifest">
-<!-- The shared theme, not a copy of it. This page is a room in the shop, so it
-     inherits the palette, the fonts and the header rather than restating them;
-     a second copy of the tokens is a second thing to keep in step. -->
+<!-- The shared theme, not a copy of it. This page is a room in the shop. -->
 <link rel="stylesheet" href="/css/style.css">
 <style>
-  /* Page-specific furniture only. Every colour below is a shared token. */
   :root{ --ok:#7fb3a1; }
 
-  .setup-wrap{ max-width: 60rem; margin: 0 auto;
-    padding: clamp(2rem,5vw,3rem) clamp(1.25rem,4vw,3rem) 4rem; }
+  .wrap{ max-width: 56rem; margin: 0 auto;
+    padding: clamp(2rem,5vw,3.2rem) clamp(1.25rem,4vw,3rem) 4rem; }
 
-  .lede{ color: var(--paper-dim); font-size: 1.02rem; max-width: 60ch; margin: 0 0 1.6rem; }
+  .lede{ color: var(--paper-dim); font-size: 1.05rem; max-width: 52ch; margin: 0 0 2rem; }
   .lede strong{ color: var(--paper); font-weight: 600; }
 
-  .setup-wrap h2{
-    font-family: var(--font-display); font-weight: 700;
-    font-size: clamp(1.2rem,2.6vw,1.55rem);
-    margin: 3rem 0 1rem; padding-bottom: .7rem;
-    border-bottom: 1px solid var(--slate-line);
-  }
-  .setup-wrap h2 .jp{ color: var(--wood-300); font-size: .78em; margin-right: .55rem; }
+  /* the download, which is the point of the page */
+  .get{ display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap; margin:0 0 .8rem; }
+  .btn.big{ font-size:1.02rem; padding:.95rem 1.8rem; font-family:var(--font-display); font-weight:700; }
+  .getmeta{ color: var(--paper-faint); font-size:.82rem; }
+  .getmeta b{ color: var(--wood-300); font-weight:600; }
 
-  pre.flow{
-    background: var(--slate-900); border: 1px solid var(--slate-line);
-    border-radius: var(--radius); padding: 1rem 1.1rem; overflow-x: auto;
-    font-size: .76rem; line-height: 1.55; color: var(--paper-faint);
-    font-family: ui-monospace, SFMono-Regular, Consolas, monospace; margin: 0 0 1rem;
-  }
-  pre.flow b{ color: var(--wood-200); font-weight: 600; }
+  h2{ font-family: var(--font-display); font-weight:700;
+    font-size: clamp(1.15rem,2.4vw,1.4rem);
+    margin: 3rem 0 1.2rem; padding-bottom:.6rem; border-bottom:1px solid var(--slate-line); }
+  h2 .jp{ color: var(--wood-300); font-size:.78em; margin-right:.5rem; }
 
-  ol.steps{ list-style: none; counter-reset: s; margin: 0; padding: 0; }
-  ol.steps > li{
-    counter-increment: s; position: relative;
-    padding: 0 0 1.6rem 2.6rem; border-left: 1px solid var(--slate-line); margin-left: .85rem;
-  }
-  ol.steps > li:last-child{ border-left-color: transparent; padding-bottom: 0; }
-  ol.steps > li::before{
-    content: counter(s); position: absolute; left: -.85rem; top: -.15rem;
-    width: 1.65rem; height: 1.65rem; border-radius: 50%;
-    background: var(--slate-850); border: 1px solid var(--wood-600); color: var(--wood-300);
-    font: 600 .78rem/1.55rem ui-monospace, Consolas, monospace; text-align: center;
-  }
-  ol.steps h3{ font-family: var(--font-display); margin: 0 0 .4rem; font-size: 1.04rem; font-weight: 700; }
-  ol.steps p{ margin: 0 0 .6rem; color: var(--paper-dim); font-size: .93rem; }
-  ol.steps p.tight{ margin-bottom: .35rem; }
+  /* three steps, as plaques */
+  .steps{ display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:1rem; margin:0; padding:0; list-style:none; }
+  .steps li{ background:var(--slate-850); border:1px solid var(--slate-line);
+    border-radius:var(--radius); padding:1.1rem 1.2rem 1.2rem; position:relative; }
+  .steps .n{ font-family:ui-monospace,Consolas,monospace; font-size:.72rem;
+    color:var(--wood-300); border:1px solid var(--wood-600); border-radius:999px;
+    padding:.1rem .5rem; }
+  .steps h3{ font-family:var(--font-display); font-size:1rem; margin:.6rem 0 .35rem; font-weight:700; }
+  .steps p{ margin:0; color:var(--paper-dim); font-size:.88rem; }
+  .steps code{ color:var(--wood-200); font-family:ui-monospace,Consolas,monospace; font-size:.86em; }
 
-  code, .mono{ font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
-  p code, td code, li code{ color: var(--wood-200); font-size: .9em; }
+  pre.flow{ background:var(--slate-900); border:1px solid var(--slate-line);
+    border-radius:var(--radius); padding:1rem 1.1rem; overflow-x:auto;
+    font-size:.74rem; line-height:1.6; color:var(--paper-faint);
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace; margin:0; }
+  pre.flow b{ color:var(--wood-200); font-weight:600; }
 
-  .cmd{
-    display: block; background: var(--ink); border: 1px solid var(--slate-line);
-    border-left: 2px solid var(--wood-600); border-radius: var(--radius);
-    padding: .7rem .9rem; font-size: .8rem; overflow-x: auto; white-space: pre;
-    color: var(--paper); margin: 0 0 .7rem; line-height: 1.6;
-  }
+  .needs{ display:flex; gap:.6rem; flex-wrap:wrap; margin:1rem 0 0; }
+  .chip{ font-size:.78rem; border:1px solid var(--slate-line); border-radius:var(--radius);
+    padding:.4rem .8rem; color:var(--paper-dim); }
+  .chip b{ color:var(--wood-200); font-weight:600; }
+  .chip a{ color:var(--wood-300); }
 
-  .note{
-    border-left: 2px solid var(--wood-500); background: var(--slate-850);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    padding: .8rem 1.1rem; margin: .8rem 0; color: var(--paper-dim); font-size: .9rem;
-  }
-  .note b{ color: var(--wood-200); font-weight: 600; }
-  .note.sec{ border-left-color: var(--hanko); }
-  .note.sec b{ color: #c8705f; }
-  .note.good{ border-left-color: var(--ok); }
-  .note.good b{ color: var(--ok); }
+  .note{ border-left:2px solid var(--wood-500); background:var(--slate-850);
+    border-radius:0 var(--radius) var(--radius) 0; padding:.8rem 1.1rem;
+    margin:1.2rem 0 0; color:var(--paper-dim); font-size:.88rem; }
+  .note b{ color:var(--wood-200); font-weight:600; }
 
-  details.alt{
-    border: 1px solid var(--slate-line); border-radius: var(--radius);
-    padding: .75rem 1.1rem; background: var(--slate-900); margin: .8rem 0 0;
-  }
-  details.alt summary{ cursor: pointer; color: var(--paper-faint); font-size: .88rem; font-weight: 500; }
-  details.alt summary:hover{ color: var(--wood-200); }
-  details.alt[open] summary{ color: var(--wood-300); margin-bottom: .7rem; }
-
-  .pillrow{ display: flex; gap: .6rem; flex-wrap: wrap; margin: 0 0 1.4rem; }
-  .pill{
-    font-size: .7rem; letter-spacing: .08em; padding: .25rem .7rem; border-radius: 999px;
-    border: 1px solid var(--slate-line); color: var(--paper-faint); white-space: nowrap;
-  }
-  .pill b{ color: var(--wood-300); font-weight: 600; }
-  .pill.ok b{ color: var(--ok); } .pill.no b{ color: #c8705f; } .pill.wait b{ color: var(--wood-200); }
-
-  #check{ background: var(--slate-850); border: 1px solid var(--slate-line);
-    border-radius: var(--radius); padding: 1.1rem 1.2rem; }
-  #check .head{ display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
-  #out{ margin: .9rem 0 0; font-size: .8rem; color: var(--paper-faint);
-    white-space: pre-wrap; word-break: break-word;
-    font-family: ui-monospace, Consolas, monospace; }
-  #out.ok{ color: var(--ok); } #out.no{ color: #c8705f; }
-
-  .tbl{ width: 100%; border-collapse: collapse; font-size: .9rem; display: block; overflow-x: auto; }
-  .tbl th, .tbl td{ text-align: left; padding: .5rem 1rem .5rem 0;
-    border-bottom: 1px solid var(--slate-line); vertical-align: top; color: var(--paper-dim); }
-  .tbl th{ color: var(--paper-faint); font-size: .68rem; letter-spacing: .14em;
-    text-transform: uppercase; font-weight: 700; }
-  .tbl td:first-child{ white-space: nowrap; color: var(--wood-300);
-    font-family: ui-monospace, Consolas, monospace; font-size: .84rem; }
+  #check{ background:var(--slate-850); border:1px solid var(--slate-line);
+    border-radius:var(--radius); padding:1rem 1.1rem; }
+  #check .head{ display:flex; align-items:center; gap:.9rem; flex-wrap:wrap; }
+  #out{ margin:.8rem 0 0; font-size:.78rem; color:var(--paper-faint);
+    white-space:pre-wrap; word-break:break-word; font-family:ui-monospace,Consolas,monospace; }
+  #out.ok{ color:var(--ok); } #out.no{ color:#c8705f; }
+  .pill{ font-size:.7rem; letter-spacing:.08em; padding:.25rem .7rem; border-radius:999px;
+    border:1px solid var(--slate-line); color:var(--paper-faint); white-space:nowrap; }
+  .pill b{ color:var(--wood-300); font-weight:600; }
+  .pill.ok b{ color:var(--ok); } .pill.no b{ color:#c8705f; } .pill.wait b{ color:var(--wood-200); }
 </style>
 </head>
 <body class="grain-bg">
@@ -123,216 +85,99 @@
 </header>
 
 <main>
-<div class="setup-wrap">
+<div class="wrap">
 
   <p class="eyebrow">狙撃 · sniper</p>
-  <h1 style="font-family:var(--font-display);font-size:clamp(1.8rem,4.4vw,2.6rem);margin:0 0 1rem;line-height:1.2;">
-    Code written in a chat tab, landing in the <em style="font-style:normal;color:var(--wood-200);">right file</em> on disk.</h1>
+  <h1 style="font-family:var(--font-display);font-size:clamp(1.9rem,4.6vw,2.7rem);margin:0 0 1rem;line-height:1.2;">
+    Code written in a chat tab, landing in the
+    <em style="font-style:normal;color:var(--wood-200);">right file</em> on disk.</h1>
 
-  <p class="lede">A button on every code block in a browser chat. One click ships it to a relay on
-  <strong>your own machine</strong>, which stages it for review before anything touches a file —
-  no copy-paste, no credentials handled, nothing leaving loopback.</p>
+  <p class="lede">A button on every code block in a browser chat. One click sends it to a small
+  program on <strong>your own machine</strong>, which stages it for review before anything
+  touches a file.</p>
 
-  <div class="pillrow">
-    <span class="pill">relay <b>127.0.0.1:7355</b></span>
-    <span class="pill">userscript <b>0.33.0</b></span>
-    <span class="pill" id="statuspill">relay <b id="statustxt">not checked</b></span>
+  <div class="get">
+    <a class="btn big" href="/sniper/sniper-0.34.0.zip" download>Download sniper 0.33.0</a>
+    <span class="getmeta">sniper-0.34.0.zip · <b>154 KB</b> · Windows · open source<br>
+      instructions are inside the zip</span>
   </div>
 
-  <pre class="flow">chat.deepseek.com / chat.qwen.ai   (your tab, already logged in)
-   |
-   |  userscript: <b>"&#8594; Claude"</b> on every code block   (Alt+S = selection)
-   v
-GM_xmlhttpRequest --POST--&gt; <b>127.0.0.1:7355/drop</b>   (+ X-Sniper-Key)
-   |
-   +--&gt; code        --&gt; <b>drops\</b>          staged, waiting for you to apply it
-   +--&gt; whole page  --&gt; <b>envs\</b>&lt;name&gt;\    deployed live, and written to the ledger
-   +--&gt; prose       --&gt; <b>context\</b>        read for intent, never placed as a file
-   |
-   v
-<b>snipes.jsonl</b>   every snipe, and what became of it</pre>
+  <div class="needs">
+    <span class="chip"><b>Needs:</b> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">Python 3</a></span>
+    <span class="chip"><b>and:</b> <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a></span>
+    <span class="chip">no admin rights · no UAC</span>
+    <span class="chip">nothing leaves your machine</span>
+  </div>
 
-  <p class="lede" style="font-size:.92rem">No credential is ever handled. The relay does not authenticate to
-  DeepSeek or Qwen and never touches their API — the browser you are already logged into does the reading,
-  and forwards only the text you point at.</p>
-
-  <h2><span class="jp">支度</span>Setup</h2>
+  <h2><span class="jp">手順</span>How it works</h2>
   <ol class="steps">
-
     <li>
-      <h3>Get the relay running</h3>
-      <p class="tight">The relay is the local half, and is not distributed from this page — it lives in your
-      <code>sniper</code> folder. Either double-click <b>Sniper Relay</b> on the desktop, or:</p>
-      <code class="cmd">cd %USERPROFILE%\sniper
-.\tray.ps1        &lt;- background, tray icon, restarts itself on a code change
-.\run.ps1         &lt;- a visible window instead, if you want to watch the log</code>
-      <p>In tray mode there is no console window, so the output goes to <code>runs\relay-&lt;stamp&gt;.log</code>
-      and the tray menu opens it. It also watches <code>relay.py</code> and restarts the moment its bytes
-      change, so a background process cannot quietly go stale.</p>
-      <p>To start it at login instead: <code>.\install-autostart.ps1</code>. No elevation is needed at any
-      point — there is no UAC prompt anywhere in this setup.</p>
+      <span class="n">01</span>
+      <h3>Unzip it anywhere</h3>
+      <p>Drag the folder wherever you like. Then double-click <code>START-HERE.bat</code> — it
+      checks what you need and starts everything.</p>
     </li>
-
     <li>
-      <h3>Install the userscript — from your relay, not from here</h3>
-      <p class="tight">Requires <a href="https://www.tampermonkey.net/" target="_blank" rel="noopener noreferrer">Tampermonkey</a>.
-      With the relay running:</p>
-      <code class="cmd">.\install.ps1</code>
-      <p>That starts the relay and opens
-      <code class="mono">http://127.0.0.1:7355/sniper.user.js?key=&lt;your key&gt;</code>, and Tampermonkey offers
-      to install it. This is the path worth taking, for two reasons that are not obvious:</p>
-      <div class="note good"><b>Your key is already in it</b>, so there is no placeholder to edit — and the
-      relay injects <code>@updateURL</code> and <code>@downloadURL</code> pointing back at itself, so every
-      future version is <b>one click</b>. A copy installed any other way has neither: it works, and then
-      silently never updates again.</div>
-
-      <details class="alt">
-        <summary>No relay yet? Take the copy served from this page instead</summary>
-        <p><a class="btn ghost" href="/sniper/sniper.user.js">Install sniper.user.js (0.33.0)</a></p>
-        <p class="tight">This copy ships with a <b>placeholder</b> where the key goes, because this page must
-        never carry your key. Read yours and paste it into the <code>const KEY</code> line in the Tampermonkey
-        editor:</p>
-        <code class="cmd">type %USERPROFILE%\sniper\.sniper_key</code>
-        <code class="cmd">const KEY   = '__PASTE_YOUR_SNIPER_KEY__';</code>
-        <div class="note sec"><b>It will not auto-update.</b> A script installed from this page has no update
-        channel wired to your machine, so you will be hand-installing every version. Once your relay is up,
-        install from it once and that problem goes away permanently.</div>
-      </details>
+      <span class="n">02</span>
+      <h3>Click Install</h3>
+      <p>A tab opens offering a userscript, with your key already in it. Click Install. That is
+      the only setup step you do by hand.</p>
     </li>
-
     <li>
-      <h3>Chrome only: allow user scripts</h3>
-      <p><code class="mono">chrome://extensions</code> → Tampermonkey → Details → enable
-      <strong style="color:var(--paper)">Allow User Scripts</strong>. Without it, Manifest V3 Chrome silently
-      runs nothing — no error, no script, no clue.</p>
+      <span class="n">03</span>
+      <h3>Open a chat</h3>
+      <p>Go to <code>chat.qwen.ai</code> or <code>chat.deepseek.com</code> and reload. Every code
+      block now has a <code>→ Claude</code> button.</p>
     </li>
-
-    <li>
-      <h3>Reload and confirm</h3>
-      <p class="tight">Reload the chat tab. A toast names the version it is running, and the page console logs
-      it too. Every code block gets a <code>→ Claude</code> button, and a <code>⧉</code> pill appears
-      bottom-left carrying the name of the environment this chat is pointed at.</p>
-    </li>
-
   </ol>
 
-  <h2><span class="jp">点検</span>Is the relay up?</h2>
+  <h2><span class="jp">経路</span>Where the text goes</h2>
+  <pre class="flow">your chat tab   --click-->   <b>127.0.0.1:7355</b>   (loopback only, on your PC)
+   |
+   +--&gt; code        --&gt; <b>staged</b>      you review it, then it lands on disk
+   +--&gt; whole page  --&gt; <b>deployed</b>    live immediately, and written to the ledger
+   +--&gt; prose       --&gt; <b>context</b>     kept as intent, never placed as a file</pre>
+  <div class="note"><b>No credential is ever handled.</b> The relay never logs in to anything and
+  never touches an API. The browser you are already signed into does the reading, and forwards
+  only the text you point at.</div>
+
+  <h2><span class="jp">点検</span>Already installed?</h2>
   <div id="check">
     <div class="head">
-      <button class="btn" id="go" type="button">Check relay</button>
+      <button class="btn" id="go" type="button">Check my relay</button>
       <span class="pill">GET <b>127.0.0.1:7355/health</b></span>
     </div>
-    <p id="out">This runs in your browser, so it only ever sees <em>your</em> machine's relay. Nothing is sent anywhere.</p>
+    <p id="out">Runs in your browser, against your own machine. Nothing is sent anywhere.</p>
   </div>
-  <div class="note"><b>If this fails but the relay is running:</b> Chrome gates requests from a public site to a
-  loopback address behind its Private Network Access preflight, which the relay does not answer yet. That blocks
-  this button, not the userscript — the userscript uses <code>GM_xmlhttpRequest</code>, which runs in the
-  extension context and is not subject to it. Open
-  <a href="http://127.0.0.1:7355/health">http://127.0.0.1:7355/health</a> directly for the authoritative answer.</div>
 
-  <h2><span class="jp">虚実</span>When a code block is not text</h2>
-  <p class="lede" style="font-size:.93rem">Qwen does not render code as markup. It mounts <strong>a Monaco
-  editor per block</strong> — the editor VS Code is built on — and Monaco is a virtual list: only the lines the
-  viewport can show exist in the page at all, and their elements are recycled as you scroll.</p>
-  <p class="lede" style="font-size:.93rem">That single fact explains every symptom that looks like a broken
-  scrape: reads that come back shuffled, a line-number gutter counting 27,28,29,24,25,26, and a 200-line file
-  arriving as 29 lines that open <code>&lt;html&gt;</code> and never close it. <strong>No amount of reading the
-  screen recovers a line that was never mounted.</strong> It does not exist.</p>
-  <p class="lede" style="font-size:.93rem">So the capture asks the editor instead — its own model where the page
-  exposes one, otherwise mounting the whole document and pairing every rendered line with its gutter number.
-  Because each line arrives numbered, “this is the whole file” becomes a count that can be proved rather than
-  hoped for, and a partial capture is refused with the exact lines it is missing.</p>
-  <div class="note"><b>If a site still will not give its text up:</b> the review console has a paste box. Copy
-  the block by hand, paste it there, and it is staged exactly like anything sniped — same guards, same ledger.</div>
-
-  <h2><span class="jp">帳場</span>The console is the panel</h2>
-  <p class="lede" style="font-size:.93rem">Everything is reviewed at
-  <code class="mono">127.0.0.1:7355/console</code>, the first entry in the <code>⧉</code> menu. It is a front end
-  over the same command-line tool that does the placing, so containment, backups and the ledger are identical
-  whichever way you drive it.</p>
-  <table class="tbl">
-    <tr><th>It shows</th><th>Why it is there</th></tr>
-    <tr><td>recent snipes</td><td>where each one went: queued, deployed, identical, duplicate, context, refused</td></tr>
-    <tr><td>out of phase</td><td>the tab running an older script than the relay serves, or a file holding bytes the queue never put there</td></tr>
-    <tr><td>refusals</td><td>the verbatim capture, the reason, and the counts behind it — kept, not discarded</td></tr>
-    <tr><td>clear</td><td>moves a stage into <code>cleared\</code>; nothing is deleted</td></tr>
-  </table>
-  <p class="lede" style="font-size:.93rem;margin-top:1rem">Prose may go straight in. <strong>Code lands in
-  pending, or it lands in completed</strong> — every byte that reaches a file is recorded with a sha before and
-  after and a backup path, so the panel can always account for what is on disk.</p>
-
-  <h2><span class="jp">操作</span>Controls on the chat page</h2>
-  <table class="tbl">
-    <tr><th>Control</th><th>Does</th></tr>
-    <tr><td>→ Claude</td><td>one code block</td></tr>
-    <tr><td>→ msg</td><td>the whole message as prose — filed as context, never placed as a file</td></tr>
-    <tr><td>→ all</td><td>every code block in that message, in document order</td></tr>
-    <tr><td>Alt+S</td><td>the current selection</td></tr>
-    <tr><td>Alt+A</td><td><code>→ all</code> on the last message</td></tr>
-    <tr><td>Alt+D</td><td>force a DOM census</td></tr>
-    <tr><td>Alt+C</td><td><code>⇩ codebase</code> — send the actual source, not a summary of it</td></tr>
-    <tr><td>Alt+R</td><td>house rules for a new chat</td></tr>
-    <tr><td>Alt+W</td><td><code>⇧ what landed</code> — what applied, what did not, and why</td></tr>
-    <tr><td>Alt+E / ⧉</td><td>environments + review console</td></tr>
-  </table>
-
-  <h2><span class="jp">宛先</span>Addressing a drop</h2>
-  <p class="lede" style="font-size:.93rem">The first line of a block may carry its own coordinates. It is
-  stripped from the <code>.txt</code>, so the sidecar is ready to place verbatim.</p>
-  <code class="cmd">// &gt;&gt; mcmod\pack\data\foo.mcfunction @replace
-&lt;the actual content&gt;</code>
-  <table class="tbl">
-    <tr><th>Part</th><th>Accepts</th></tr>
-    <tr><td>leader</td><td><code>//</code> <code>#</code> <code>--</code> <code>;</code> <code>%</code> <code>&lt;!--</code> <code>/*</code> — or none</td></tr>
-    <tr><td>mode</td><td><code>@replace</code> (default) <code>@new</code> <code>@append</code> <code>@patch</code> <code>@note</code></td></tr>
-    <tr><td>note</td><td>anything after the mode is kept as free text</td></tr>
-  </table>
-  <p class="lede" style="font-size:.93rem;margin-top:1rem">No directive is fine — the drop is staged
-  unaddressed, for a human to route in the review console. A <strong>complete HTML document</strong> with no
-  directive is the exception: it is deployed straight into the environment this chat is pointed at, and written
-  to the ledger as it goes.</p>
-
-  <h2><span class="jp">増設</span>Arming another site</h2>
-  <p class="lede" style="font-size:.93rem">Two halves. The <code>@match</code> lines live in the script header,
-  because a browser needs those at install time:</p>
-  <code class="cmd">// @match        https://chat.deepseek.com/*
-// @match        https://chat.qwen.ai/*</code>
-  <p class="lede" style="font-size:.93rem">Everything else — which selectors find a code block, a message, the
-  composer, and what to exclude — lives in <code>sites.json</code>, which the script fetches from your relay at
-  startup. Tuning a selector is a file edit and a tab reload, <strong>not</strong> a re-install.</p>
-  <code class="cmd">"chat.qwen.ai": {
-  "code":     ["pre", "[class*=\"code-block\"]"],
-  "messages": [".chat-response-message"],
-  "exclude":  [".monaco-editor"]
-}</code>
-  <p class="lede" style="font-size:.93rem">Open the site and press <code>Alt+D</code>: the census reports which
-  selectors hit, the most common classes on text-bearing nodes, and — if the page uses Monaco — the editor's own
-  numbers.</p>
+  <h2><span class="jp">中身</span>What's in the box</h2>
+  <p class="lede" style="font-size:.95rem;margin-bottom:1rem">The zip is the whole thing — the
+  relay, the userscript, the review console, the tests, and the full documentation.
+  <code style="color:var(--wood-200)">INSTALL.txt</code> is the short version;
+  <code style="color:var(--wood-200)">README.md</code> is the real one: why it works this way,
+  what the safety properties are, how to point it at a chat site it has never seen.</p>
+  <p class="lede" style="font-size:.95rem">It reads code blocks other tools can't, too — Qwen
+  renders code into a full editor rather than as text, so only the lines on screen exist at all.
+  Sniper asks the editor instead of scraping the screen, and refuses a partial capture rather
+  than handing you a file with holes in it.</p>
 
 </div>
 </main>
 
 <footer class="site-footer">
-  <span>sniper 0.33.0 — the relay stays on your machine. This page carries the userscript and
-  these instructions, nothing else. It never carries your key, and the build refuses to ship if it finds one.</span>
+  <span>sniper 0.33.0 — the relay stays on your machine. This page carries the
+  download and nothing else; it never carries your key, and the build refuses to ship if it
+  finds one.</span>
   <span><a href="/">← back to the shop</a></span>
 </footer>
 
 <script>
 const RELAY = 'http://127.0.0.1:7355';
 const out = document.getElementById('out');
-const pill = document.getElementById('statuspill');
-const ptxt = document.getElementById('statustxt');
-
-function setPill(cls, txt) {
-  pill.className = 'pill ' + cls;
-  ptxt.textContent = txt;
-}
 
 async function check() {
   out.className = '';
   out.textContent = 'contacting ' + RELAY + '/health ...';
-  setPill('wait', 'checking');
 
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 4000);
@@ -345,10 +190,8 @@ async function check() {
     out.className = 'ok';
     out.textContent =
       'relay up on port ' + j.port + '\n' +
-      'static server  ' + j.static + '\n' +
-      'drops folder   ' + j.drops + '\n' +
-      'staged so far  ' + j.count;
-    setPill('ok', 'up');
+      'staged so far  ' + j.count + '\n\n' +
+      'Console: ' + RELAY + '/console';
   } catch (e) {
     clearTimeout(timer);
     out.className = 'no';
@@ -358,7 +201,6 @@ async function check() {
       'could not reach the relay (' + (e.name === 'AbortError' ? 'timed out' : e.message) + ')\n\n' +
       'Either it is not running, or the browser blocked this page from calling a\n' +
       'loopback address. Open ' + RELAY + '/health directly to tell which.';
-    setPill('no', 'unreachable');
   }
 }
 

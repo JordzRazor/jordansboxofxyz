@@ -20,7 +20,7 @@
       "route": "/sniper/*",
       "headers": {
         "Cache-Control": "no-cache",
-        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:7355 http://localhost:7355; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://127.0.0.1:7355 http://localhost:7355; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
       }
     }
   ],
@@ -32,6 +32,7 @@
   "mimeTypes": {
     ".wgsl": "text/plain",
     ".js": "text/javascript",
-    ".user.js": "text/javascript"
+    ".user.js": "text/javascript",
+    ".zip": "application/zip"
   }
 }
