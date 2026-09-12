@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sniper — send text to the local relay
 // @namespace    south.sniper
-// @version      0.33.0
+// @version      0.35.0
 // @description  Ship code blocks / selections from a designated page to the sniper relay on 127.0.0.1:7355
 // @author       South
 // @run-at       document-idle
@@ -19,12 +19,14 @@
 // @match        https://chat.deepseek.com/*
 // @match        https://*.deepseek.com/*
 // @match        https://chat.qwen.ai/*
+// @match        https://www.kimi.ai/*
+// @match        https://kimi.ai/*
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  const VERSION = '0.33.0';
+  const VERSION = '0.35.0';
   const BASE  = 'http://127.0.0.1:7355';
   const KEY   = '__PASTE_YOUR_SNIPER_KEY__';
 
@@ -1010,10 +1012,26 @@
         return exact;
       }
       const code = el.querySelector('code') || el;
-      // textContent ignores rendering entirely, so it is the only honest
-      // measure of how much text is actually IN this block.
-      const whole = (code.textContent || '').replace(/\u00a0/g, ' ');
-      const naive = (code.innerText || whole).replace(/\u00a0/g, ' ');
+      // Hide OUR OWN furniture before reading. On some layouts the button we
+      // inject is a child of the very element we are about to read, so
+      // innerText picks it up and "\u2192 Claude" lands in the captured file - it
+      // did exactly that on Kimi, into line 5 of a game that then deployed.
+      // Deliberately NOT SITE.exclude: that names things to drop from a
+      // MESSAGE read, and on Qwen it is `.monaco-editor` - applying it here
+      // would delete the code instead of the chrome.
+      const mine = Array.from(
+        code.querySelectorAll('.sniper-btn, .sniper-hub, .sniper-menu'));
+      const wasShown = mine.map((n) => n.style.display);
+      mine.forEach((n) => { n.style.display = 'none'; });
+      let whole, naive;
+      try {
+        // textContent ignores rendering entirely, so it is the only honest
+        // measure of how much text is actually IN this block.
+        whole = (code.textContent || '').replace(/\u00a0/g, ' ');
+        naive = (code.innerText || whole).replace(/\u00a0/g, ' ');
+      } finally {
+        mine.forEach((n, i) => { n.style.display = wasShown[i]; });
+      }
       if (!SITE.visualOrder) {
         lastRead = { inDom: whole.length, rendered: naive.length, took: naive.length };
         return naive;

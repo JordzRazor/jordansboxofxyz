@@ -1,7 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/css/*", "/js/*", "/demos/*", "/assets/*", "/sniper/*", "/sniper.user.js", "/zombie/*", "/rougelike/*", "/*.{png,jpg,gif,svg,ico,json,txt}"]
+    "exclude": ["/css/*", "/js/*", "/demos/*", "/assets/*", "/sniper/*", "/sniper.user.js", "/zombie/*", "/rougelike/*", "/grip/*", "/*.{png,jpg,gif,svg,ico,json,txt}"]
   },
   "routes": [
     {

@@ -26,7 +26,8 @@ $webbench = 'C:\Users\South\webbench'
 $pages = @(
     @{ Name = 'sniper';    Src = "$webbench\sniper-page";    Dest = 'sniper' },
     @{ Name = 'zombie';    Src = "$webbench\zombie-page";    Dest = 'zombie' },
-    @{ Name = 'rougelike'; Src = "$webbench\rougelike-page"; Dest = 'rougelike' }
+    @{ Name = 'rougelike'; Src = "$webbench\rougelike-page"; Dest = 'rougelike' },
+    @{ Name = 'grip';      Src = "$webbench\grip-page";      Dest = 'grip' }
 )
 
 Push-Location $here
@@ -137,12 +138,22 @@ try {
     # navigationFallback.exclude it comes back 200 as text/html instead of
     # 404ing, and the game dies on a content-type error. Watch the type, not
     # just the status.
-    # The download is versioned, so discover it rather than hardcode it: a name
-    # pinned here goes stale the first time the version moves, and would then
-    # verify a file nobody downloads while the real one 404s unnoticed.
-    $paths = @('/', '/sniper/', '/sniper/sniper.user.js', '/zombie/', '/zombie/three.module.js')
-    Get-ChildItem (Join-Path $here 'sniper') -Filter '*.zip' -ErrorAction SilentlyContinue |
-        ForEach-Object { $paths += "/sniper/$($_.Name)" }
+    # Discovered, never hardcoded. A pinned list goes stale the moment a page
+    # gains a dependency or a version moves, and the failure it misses is the
+    # quiet one: an asset that 200s as text/html because it fell out of
+    # navigationFallback.exclude, which breaks only in a browser. So walk what
+    # was actually published and check every script and archive it ships.
+    $paths = @('/')
+    foreach ($p in $pages) {
+        $dest = Join-Path $here $p.Dest
+        if (-not (Test-Path $dest)) { continue }
+        $paths += "/$($p.Dest)/"
+        Get-ChildItem $dest -Recurse -File -Include *.js, *.zip |
+            ForEach-Object {
+                $rel = $_.FullName.Substring($dest.Length).TrimStart('\').Replace('\', '/')
+                $paths += "/$($p.Dest)/$rel"
+            }
+    }
     foreach ($path in $paths) {
         try {
             $r = Invoke-WebRequest "$site$path" -UseBasicParsing -TimeoutSec 20
