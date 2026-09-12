@@ -17,8 +17,9 @@
     <span>jordansboxofxyz<span class="sub" style="display:block;">a small shop of interactive things</span></span>
   </a>
   <nav class="site-nav" aria-label="Primary">
-    <a href="#gallery">Gallery</a>
     <a href="#workbench">Workbench</a>
+    <a href="#pipeline">How it's made</a>
+    <a href="#gallery">Gallery</a>
     <a href="#about">About</a>
     <a href="#notice">Support</a>
   </nav>
@@ -36,7 +37,13 @@
         <a class="btn" href="/sniper/">Get sniper</a>
         <a class="btn ghost" href="#gallery">And the rest of the shop</a>
       </div>
-      <p class="hero-note" style="margin-top:1.6rem;">Sniper needs Tampermonkey. Everything else here needs nothing at all.</p>
+      <ul class="hero-stats">
+        <li><b>Open source</b> · download and read it</li>
+        <li><b>Loopback only</b> · nothing leaves your machine</li>
+        <li><b>No account</b>, no sign-in, no telemetry</li>
+        <li>Runs fine on <b>an old laptop</b></li>
+      </ul>
+      <p class="hero-note" style="margin-top:1.2rem;">Sniper needs Tampermonkey. Everything else here needs nothing at all.</p>
     </div>
   </section>
 
@@ -73,13 +80,49 @@
 
   <div class="divider"></div>
 
+  <section class="section" id="pipeline">
+    <div class="section-head">
+      <h2>How a thing on the shelf gets made</h2>
+      <span class="count">the short version</span>
+    </div>
+    <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
+      Two of the pieces below were built this way end to end. Nothing was copy-pasted,
+      and nothing reached a file without being looked at first.
+    </p>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <span class="jp">問答</span>
+        <h4>Ask in a chat</h4>
+        <p>Describe the change in a browser chat tab you're already signed into.</p>
+      </div>
+      <div class="pipe-step">
+        <span class="jp">狙撃</span>
+        <h4>Snipe the block</h4>
+        <p>One click on the code block sends it to a relay on your own machine.</p>
+      </div>
+      <div class="pipe-step">
+        <span class="jp">検分</span>
+        <h4>Review it</h4>
+        <p>It's staged, not applied. You decide where it lands — with a backup and a ledger entry.</p>
+      </div>
+      <div class="pipe-step end">
+        <span class="jp">完成</span>
+        <h4>Play it</h4>
+        <p>Reload. The two sealed pieces below are the output of exactly this loop.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <section class="section" id="gallery">
     <div class="section-head">
       <h2>The shelf</h2>
-      <span class="count">3 pieces, more being carved</span>
+      <span class="count">4 pieces, more being carved</span>
     </div>
     <p style="color:var(--paper-faint); max-width:62ch; margin:-1rem 0 1.8rem;">
       No accounts, no downloads, nothing to install. Just open a piece and look at it for a while.
+      The ones carrying a red seal were built through sniper.
     </p>
     <div class="gallery">
 
@@ -118,9 +161,32 @@
           <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">屍</span>
         </div>
         <div class="card-body">
-          <span class="card-tag">three.js · WebGL</span>
+          <span class="card-tag made">built with sniper</span>
           <h3>Zombie.FPS</h3>
-          <p>A first-person shooter with shambling things in it. Click once to capture the mouse, WASD to move, Esc to let go. Built end to end through the sniper pipeline — written in a chat window, placed on disk, never copy-pasted.</p>
+          <p>A first-person shooter with shambling things in it. Click once to capture the mouse, WASD to move, Esc to let go.</p>
+          <div class="made-note">
+            <span class="seal" aria-hidden="true">狙</span>
+            <span>Written in a chat window, placed on disk by the relay, never copy-pasted.</span>
+          </div>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs anywhere</span>
+            <span>open →</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="/rougelike/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">迷宮</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag made">built with sniper</span>
+          <h3>Infinite Dungeon</h3>
+          <p>A grid-based roguelike that keeps generating corridor as you walk. Click to enter, WASD to move, mouse to look, Esc to let go.</p>
+          <div class="made-note">
+            <span class="seal" aria-hidden="true">狙</span>
+            <span>Built the same way, and still being built — the newest piece here.</span>
+          </div>
           <div class="card-foot">
             <span><span class="status-dot"></span>runs anywhere</span>
             <span>open →</span>

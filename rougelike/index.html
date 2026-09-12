@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite 3D Roguelike - Optimized</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; font-family: monospace; }
+        canvas { display: block; }
+        #crosshair {
+            position: absolute; top: 50%; left: 50%;
+            width: 4px; height: 4px; background: rgba(255,255,255,0.8);
+            border-radius: 50%; transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        #ui {
+            position: absolute; bottom: 20px; left: 20px;
+            color: #fff; font-size: 12px; pointer-events: none;
+            text-shadow: 1px 1px 2px #000;
+        }
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: flex; align-items: center;
+            justify-content: center; flex-direction: column; color: #fff;
+            cursor: pointer; z-index: 10;
+        }
+        #overlay h1 { margin: 0; font-size: 24px; color: #00ffcc; }
+        #overlay p { margin: 10px 0 0; color: #888; }
+        .hidden { display: none !important; }
+        #debug {
+            position: absolute; top: 10px; right: 10px;
+            color: #0f0; font-size: 11px; text-align: right;
+            text-shadow: 1px 1px 2px #000;
+            background: rgba(0,0,0,0.5); padding: 8px; border-radius: 4px;
+            line-height: 1.4;
+        }
+        .warn { color: #ff6; }
+        .bad { color: #f66; }
+    </style>
+</head>
+<body>
+    <div id="crosshair"></div>
+    <div id="ui">WASD: Move | Mouse: Look | ESC: Release</div>
+    <div id="debug">Loading...</div>
+    <div id="overlay">
+        <h1>CLICK TO ENTER INFINITE DUNGEON</h1>
+        <p>Optimized build — capped @ 60fps</p>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "./three.module.js",
+            "three/addons/": "./addons/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+        const CELL_SIZE = 2;
+        const WALL_HEIGHT = 3;
+        const PLAYER_HEIGHT = 1.6;
+        const MOUSE_SENSITIVITY = 0.002;
+        const CHUNK_SIZE = 10;
+        const RENDER_DISTANCE = 3;
+        const TARGET_FPS = 60;                    // Software VSync target
+        const MAX_SHADOW_CASTERS = 3;             // Flashlight + 2 nearest point lights
+        const SHADOW_MAP_SIZE = 512;              // Lower = faster
+
+        // Seeded RNG (Mulberry32)
+        function mulberry32(seed) {
+            return function() {
+                let t = seed += 0x6D2B79F5;
+                t = Math.imul(t ^ t >>> 15, t | 1);
+                t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            }
+        }
+        function hashChunk(cx, cy, seed = 12345) {
+            let h = seed;
+            h = Math.imul(h ^ cx, 0x85EBCA6B);
+            h = Math.imul(h ^ cy, 0xC2B2AE35);
+            return (h ^ h >>> 16) >>> 0;
+        }
+
+        // ==========================================
+        // INFINITE DUNGEON GENERATOR
+        // ==========================================
+        class InfiniteDungeon {
+            constructor() {
+                this.chunks = new Map();
+                this.seed = Math.floor(Math.random() * 100000);
+            }
+            generateChunk(cx, cy) {
+                const key = `${cx},${cy}`;
+                if (this.chunks.has(key)) return this.chunks.get(key);
+                const rng = mulberry32(hashChunk(cx, cy, this.seed));
+                const chunk = { x: cx, y: cy, cells: [], lights: [], meshes: [] };
+                for (let y = 0; y < CHUNK_SIZE; y++) {
+                    chunk.cells[y] = [];
+                    for (let x = 0; x < CHUNK_SIZE; x++) {
+                        const edge = Math.min(x, y, CHUNK_SIZE - 1 - x, CHUNK_SIZE - 1 - y);
+                        if (edge < 2 && rng() > 0.3) chunk.cells[y][x] = 1;
+                        else chunk.cells[y][x] = rng() > 0.35 ? 1 : 0;
+                    }
+                }
+                // Carve rooms
+                const numRooms = Math.floor(rng() * 3) + 2;
+                for (let i = 0; i < numRooms; i++) {
+                    const rx = Math.floor(rng() * (CHUNK_SIZE - 4)) + 2;
+                    const ry = Math.floor(rng() * (CHUNK_SIZE - 4)) + 2;
+                    const rw = Math.floor(rng() * 3) + 2;
+                    const rh = Math.floor(rng() * 3) + 2;
+                    for (let y = ry; y < ry + rh && y < CHUNK_SIZE - 1; y++) {
+                        for (let x = rx; x < rx + rw && x < CHUNK_SIZE - 1; x++) {
+                            chunk.cells[y][x] = 0;
+                        }
+                    }
+                }
+                // Occasional lights
+                if (rng() > 0.3) {
+                    const lx = Math.floor(rng() * CHUNK_SIZE);
+                    const ly = Math.floor(rng() * CHUNK_SIZE);
+                    if (chunk.cells[ly][lx] === 0) {
+                        const t = rng();
+                        chunk.lights.push({
+                            x: lx, y: ly,
+                            color: t > 0.7 ? 0xff8844 : t > 0.4 ? 0x6666ff : 0x66ff66,
+                            intensity: rng() * 1.5 + 2.0,
+                            flicker: rng() > 0.5
+                        });
+                    }
+                }
+                this.chunks.set(key, chunk);
+                return chunk;
+            }
+            getCell(wx, wy) {
+                const cx = Math.floor(wx / CHUNK_SIZE);
+                const cy = Math.floor(wy / CHUNK_SIZE);
+                const lx = ((wx % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+                const ly = ((wy % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+                return this.generateChunk(cx, cy).cells[ly][lx];
+            }
+            unloadDistant(px, py, maxDist) {
+                for (const [key, chunk] of this.chunks) {
+                    if (Math.abs(chunk.x - px) + Math.abs(chunk.y - py) > maxDist * 1.5) {
+                        for (const m of chunk.meshes) {
+                            scene.remove(m);
+                            if (m.geometry) m.geometry.dispose();
+                        }
+                        chunk.meshes = [];
+                        this.chunks.delete(key);
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // SCENE SETUP
+        // ==========================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a1a2e);
+        scene.fog = new THREE.FogExp2(0x1a1a2e, 0.035);
+
+        const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 100);
+        const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); // Cap DPR for perf
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        scene.add(new THREE.AmbientLight(0x404060, 0.8));
+        scene.add(new THREE.HemisphereLight(0x606080, 0x404040, 0.6));
+
+        const flashlight = new THREE.SpotLight(0xffffee, 3, 25, Math.PI / 5, 0.3, 1.5);
+        flashlight.castShadow = true;
+        flashlight.shadow.mapSize.set(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+        flashlight.shadow.camera.near = 0.5;
+        flashlight.shadow.camera.far = 25;
+        const flashlightTarget = new THREE.Object3D();
+        scene.add(flashlightTarget);
+        flashlight.target = flashlightTarget;
+        scene.add(flashlight);
+
+        const playerGlow = new THREE.PointLight(0x88aaff, 1.5, 8, 2);
+        playerGlow.castShadow = false; // Never cast shadows — pure fill
+        scene.add(playerGlow);
+
+        // ==========================================
+        // MATERIALS
+        // ==========================================
+        const floorMat = new THREE.MeshStandardMaterial({
+            color: 0x3a3a4a, roughness: 0.9, emissive: 0x111122, emissiveIntensity: 0.1
+        });
+        const wallMat = new THREE.MeshStandardMaterial({
+            color: 0x5a4a3a, roughness: 0.8, emissive: 0x221111, emissiveIntensity: 0.1
+        });
+
+        // ==========================================
+        // GEOMETRY HELPERS — FACE CULLING
+        // ==========================================
+        // Build a single face (quad) as a BufferGeometry
+        function makeFace(v0, v1, v2, v3, nx, ny, nz) {
+            const positions = new Float32Array([
+                v0[0], v0[1], v0[2],
+                v1[0], v1[1], v1[2],
+                v2[0], v2[1], v2[2],
+                v3[0], v3[1], v3[2]
+            ]);
+            const normals = new Float32Array([
+                nx, ny, nz, nx, ny, nz, nx, ny, nz, nx, ny, nz
+            ]);
+            const indices = [0, 1, 2, 0, 2, 3];
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+            geo.setIndex(indices);
+            return geo;
+        }
+
+        // ==========================================
+        // CHUNK BUILDER — MERGED + FACE-CULLED
+        // ==========================================
+        function buildChunkMeshes(chunk) {
+            if (chunk.meshes.length > 0) return;
+            const ox = chunk.x * CHUNK_SIZE * CELL_SIZE;
+            const oz = chunk.y * CHUNK_SIZE * CELL_SIZE;
+            const wallGeos = [];
+            const floorGeos = [];
+
+            // Helper: get cell, treating out-of-chunk as solid (safe face culling at borders)
+            const isSolid = (lx, ly) => {
+                if (lx < 0 || lx >= CHUNK_SIZE || ly < 0 || ly >= CHUNK_SIZE) return true;
+                return chunk.cells[ly][lx] === 1;
+            };
+
+            for (let y = 0; y < CHUNK_SIZE; y++) {
+                for (let x = 0; x < CHUNK_SIZE; x++) {
+                    const wx = ox + x * CELL_SIZE;
+                    const wz = oz + y * CELL_SIZE;
+                    const cell = chunk.cells[y][x];
+
+                    if (cell === 0) {
+                        // Floor — only add top face (always exposed)
+                        floorGeos.push(makeFace(
+                            [wx - 1, 0, wz - 1],
+                            [wx + 1, 0, wz - 1],
+                            [wx + 1, 0, wz + 1],
+                            [wx - 1, 0, wz + 1],
+                            0, 1, 0
+                        ));
+                    } else {
+                        // Wall — only add faces exposed to air (face culling)
+                        const h = WALL_HEIGHT;
+                        // +X face
+                        if (!isSolid(x + 1, y)) wallGeos.push(makeFace(
+                            [wx + 1, 0, wz - 1], [wx + 1, 0, wz + 1],
+                            [wx + 1, h, wz + 1], [wx + 1, h, wz - 1], 1, 0, 0));
+                        // -X face
+                        if (!isSolid(x - 1, y)) wallGeos.push(makeFace(
+                            [wx - 1, 0, wz + 1], [wx - 1, 0, wz - 1],
+                            [wx - 1, h, wz - 1], [wx - 1, h, wz + 1], -1, 0, 0));
+                        // +Z face
+                        if (!isSolid(x, y + 1)) wallGeos.push(makeFace(
+                            [wx + 1, 0, wz + 1], [wx - 1, 0, wz + 1],
+                            [wx - 1, h, wz + 1], [wx + 1, h, wz + 1], 0, 0, 1));
+                        // -Z face
+                        if (!isSolid(x, y - 1)) wallGeos.push(makeFace(
+                            [wx - 1, 0, wz - 1], [wx + 1, 0, wz - 1],
+                            [wx + 1, h, wz - 1], [wx - 1, h, wz - 1], 0, 0, -1));
+                        // Top face
+                        wallGeos.push(makeFace(
+                            [wx - 1, h, wz - 1], [wx + 1, h, wz - 1],
+                            [wx + 1, h, wz + 1], [wx - 1, h, wz + 1], 0, 1, 0));
+                    }
+                }
+            }
+
+            // Merge into ONE draw call per material
+            if (floorGeos.length) {
+                const merged = mergeGeometries(floorGeos, false);
+                const mesh = new THREE.Mesh(merged, floorMat);
+                mesh.receiveShadow = true;
+                mesh.frustumCulled = true;
+                scene.add(mesh);
+                chunk.meshes.push(mesh);
+                floorGeos.forEach(g => g.dispose());
+            }
+            if (wallGeos.length) {
+                const merged = mergeGeometries(wallGeos, false);
+                const mesh = new THREE.Mesh(merged, wallMat);
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                mesh.frustumCulled = true;
+                scene.add(mesh);
+                chunk.meshes.push(mesh);
+                wallGeos.forEach(g => g.dispose());
+            }
+
+            // Lights (shadowless by default — shadow budget promotes them later)
+            for (const ld of chunk.lights) {
+                const light = new THREE.PointLight(ld.color, ld.intensity, 15, 1.5);
+                light.castShadow = false; // Default: no shadows
+                light.position.set(ox + ld.x * CELL_SIZE, 1.5, oz + ld.y * CELL_SIZE);
+                light.userData = {
+                    baseIntensity: ld.intensity,
+                    flicker: ld.flicker,
+                    offset: Math.random() * 100,
+                    isDungeonLight: true
+                };
+                scene.add(light);
+                chunk.meshes.push(light);
+            }
+        }
+
+        // ==========================================
+        // PLAYER
+        // ==========================================
+        const yawObject = new THREE.Object3D();
+        yawObject.position.set(0, PLAYER_HEIGHT, 0);
+        yawObject.add(camera);
+        scene.add(yawObject);
+
+        let gridX = 0, gridY = 0, targetGridX = 0, targetGridY = 0;
+        let isMoving = false;
+        const MOVE_SPEED = 4.5;
+
+        // ==========================================
+        // INPUT
+        // ==========================================
+        const keys = {};
+        let mouseDeltaX = 0, mouseDeltaY = 0, pitchAngle = 0;
+        const overlay = document.getElementById('overlay');
+        overlay.addEventListener('click', () => renderer.domElement.requestPointerLock());
+        document.addEventListener('pointerlockchange', () => {
+            overlay.classList.toggle('hidden', document.pointerLockElement === renderer.domElement);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (document.pointerLockElement === renderer.domElement) {
+                mouseDeltaX += e.movementX;
+                mouseDeltaY += e.movementY;
+            }
+        });
+        addEventListener('keydown', (e) => keys[e.code] = true);
+        addEventListener('keyup', (e) => keys[e.code] = false);
+
+        // ==========================================
+        // CHUNK MANAGEMENT + SHADOW BUDGET
+        // ==========================================
+        const allDungeonLights = [];
+        function updateChunks() {
+            const pcx = Math.floor(gridX / CHUNK_SIZE);
+            const pcy = Math.floor(gridY / CHUNK_SIZE);
+            for (let dx = -RENDER_DISTANCE; dx <= RENDER_DISTANCE; dx++) {
+                for (let dy = -RENDER_DISTANCE; dy <= RENDER_DISTANCE; dy++) {
+                    buildChunkMeshes(dungeon.generateChunk(pcx + dx, pcy + dy));
+                }
+            }
+            dungeon.unloadDistantChunks(pcx, pcy, RENDER_DISTANCE);
+
+            // Rebuild light list
+            allDungeonLights.length = 0;
+            for (const chunk of dungeon.chunks.values()) {
+                for (const m of chunk.meshes) {
+                    if (m.isPointLight && m.userData.isDungeonLight) allDungeonLights.push(m);
+                }
+            }
+        }
+
+        // Shadow budget: only closest N lights cast shadows
+        const _tmpVec = new THREE.Vector3();
+        function updateShadowBudget() {
+            // Sort by distance to player
+            allDungeonLights.forEach(l => {
+                l.userData.dist = l.position.distanceToSquared(yawObject.position);
+            });
+            allDungeonLights.sort((a, b) => a.userData.dist - b.userData.dist);
+            allDungeonLights.forEach((l, i) => {
+                const shouldShadow = i < MAX_SHADOW_CASTERS - 1; // -1 because flashlight takes 1 slot
+                if (l.castShadow !== shouldShadow) {
+                    l.castShadow = shouldShadow;
+                    if (shouldShadow) {
+                        l.shadow.mapSize.set(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+                        // Force shadow map rebuild
+                        if (l.shadow.map) { l.shadow.map.dispose(); l.shadow.map = null; }
+                    } else {
+                        if (l.shadow.map) { l.shadow.map.dispose(); l.shadow.map = null; }
+                    }
+                    l.needsUpdate = true;
+                }
+            });
+        }
+
+        const dungeon = new InfiniteDungeon();
+        updateChunks();
+        updateShadowBudget();
+
+        // ==========================================
+        // SOFTWARE VSYNC + RENDER LOOP
+        // ==========================================
+        const clock = new THREE.Clock();
+        const frameInterval = 1000 / TARGET_FPS;
+        let lastFrameTime = 0;
+        let bobTimer = 0, currentFov = 75;
+        let lastChunkX = 0, lastChunkY = 0;
+        let frameTimeAccum = 0, frameCount = 0, displayFps = 0;
+        let lastFpsUpdate = 0;
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            // === SOFTWARE VSYNC: skip frame if too soon ===
+            const elapsed = timestamp - lastFrameTime;
+            if (elapsed < frameInterval - 1) return; // -1ms tolerance for timer jitter
+            lastFrameTime = timestamp - (elapsed % frameInterval);
+
+            const frameStart = performance.now();
+            const delta = Math.min(clock.getDelta(), 0.1);
+            const time = clock.getElapsedTime();
+
+            // Mouse look
+            if (mouseDeltaX || mouseDeltaY) {
+                yawObject.rotation.y -= mouseDeltaX * MOUSE_SENSITIVITY;
+                pitchAngle -= mouseDeltaY * MOUSE_SENSITIVITY;
+                pitchAngle = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, pitchAngle));
+                camera.rotation.x = pitchAngle;
+                mouseDeltaX = 0; mouseDeltaY = 0;
+            }
+
+            // Movement
+            if (!isMoving) {
+                let dx = 0, dz = 0;
+                const yaw = yawObject.rotation.y;
+                const fx = -Math.sin(yaw), fz = -Math.cos(yaw);
+                if (keys['KeyW']) { dx = fx; dz = fz; }
+                else if (keys['KeyS']) { dx = -fx; dz = -fz; }
+                else if (keys['KeyA']) { dx = fz; dz = -fx; }
+                else if (keys['KeyD']) { dx = -fz; dz = fx; }
+                if (dx || dz) {
+                    if (Math.abs(dx) > Math.abs(dz)) { dx = Math.sign(dx); dz = 0; }
+                    else { dz = Math.sign(dz); dx = 0; }
+                    const nx = targetGridX + dx, ny = targetGridY + dz;
+                    if (dungeon.getCell(nx, ny) === 0) {
+                        targetGridX = nx; targetGridY = ny; isMoving = true;
+                    }
+                }
+            }
+
+            if (isMoving) {
+                const tx = targetGridX * CELL_SIZE, tz = targetGridY * CELL_SIZE;
+                if (yawObject.position.x !== tx) {
+                    const d = Math.sign(tx - yawObject.position.x);
+                    yawObject.position.x += d * MOVE_SPEED * delta;
+                    if (Math.abs(yawObject.position.x - tx) < 0.05) yawObject.position.x = tx;
+                }
+                if (yawObject.position.z !== tz) {
+                    const d = Math.sign(tz - yawObject.position.z);
+                    yawObject.position.z += d * MOVE_SPEED * delta;
+                    if (Math.abs(yawObject.position.z - tz) < 0.05) yawObject.position.z = tz;
+                }
+                if (yawObject.position.x === tx && yawObject.position.z === tz) {
+                    gridX = targetGridX; gridY = targetGridY; isMoving = false;
+                }
+                bobTimer += delta * 12;
+                camera.position.y = Math.sin(bobTimer) * 0.06;
+                camera.position.x = Math.cos(bobTimer * 0.5) * 0.03;
+                currentFov += (85 - currentFov) * 0.1;
+            } else {
+                camera.position.y += (0 - camera.position.y) * 0.1;
+                camera.position.x += (0 - camera.position.x) * 0.1;
+                currentFov += (75 - currentFov) * 0.1;
+                bobTimer = 0;
+            }
+            if (Math.abs(camera.fov - currentFov) > 0.1) {
+                camera.fov = currentFov;
+                camera.updateProjectionMatrix();
+            }
+
+            // Flashlight aim
+            flashlight.position.copy(yawObject.position);
+            flashlight.position.y -= 0.2;
+            const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+            flashlightTarget.position.copy(yawObject.position).add(dir.multiplyScalar(10));
+            playerGlow.position.copy(yawObject.position);
+
+            // Flicker lights
+            for (const l of allDungeonLights) {
+                if (l.userData.flicker) {
+                    l.intensity = l.userData.baseIntensity *
+                        (0.85 + Math.sin(time * 10 + l.userData.offset) * 0.15);
+                }
+            }
+
+            // Chunk update
+            const pcx = Math.floor(gridX / CHUNK_SIZE);
+            const pcy = Math.floor(gridY / CHUNK_SIZE);
+            if (pcx !== lastChunkX || pcy !== lastChunkY) {
+                updateChunks();
+                updateShadowBudget();
+                lastChunkX = pcx; lastChunkY = pcy;
+            }
+
+            renderer.render(scene, camera);
+
+            // === TELEMETRY ===
+            const frameTime = performance.now() - frameStart;
+            frameTimeAccum += frameTime;
+            frameCount++;
+            if (timestamp - lastFpsUpdate > 500) {
+                displayFps = Math.round(1000 * frameCount / (timestamp - lastFpsUpdate));
+                const avgFrame = (frameTimeAccum / frameCount).toFixed(2);
+                const info = renderer.info.render;
+                const callsClass = info.calls > 50 ? 'warn' : info.calls > 100 ? 'bad' : '';
+                const fpsClass = displayFps < TARGET_FPS - 5 ? 'warn' : displayFps < TARGET_FPS - 15 ? 'bad' : '';
+                document.getElementById('debug').innerHTML =
+                    `<span class="${fpsClass}">FPS: ${displayFps}</span> / ${TARGET_FPS}<br>` +
+                    `Frame: ${avgFrame}ms<br>` +
+                    `<span class="${callsClass}">Draw calls: ${info.calls}</span><br>` +
+                    `Triangles: ${info.triangles.toLocaleString()}<br>` +
+                    `Chunks: ${dungeon.chunks.size}<br>` +
+                    `Shadow casters: ${MAX_SHADOW_CASTERS}`;
+                frameTimeAccum = 0; frameCount = 0; lastFpsUpdate = timestamp;
+            }
+        }
+        requestAnimationFrame(animate);
+
+        addEventListener('resize', () => {
+            camera.aspect = innerWidth / innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(innerWidth, innerHeight);
+        });
+    </script>
+</body>
+</html>

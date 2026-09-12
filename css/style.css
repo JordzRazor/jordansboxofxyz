@@ -326,6 +326,83 @@ main{ min-height: 60vh; }
 }
 .status-dot.gpu{ background:#7fb3a1; }
 
+/* ---------- "made with sniper" ----------
+   The palette keeps one seal of colour for things that deserve emphasis, and
+   this is what it was being saved for: the pieces on the shelf that were not
+   just built here, but built THROUGH the tool this shop makes. It marks a
+   provenance, so it is a seal rather than a label. */
+.card-tag.made{
+  color: var(--hanko);
+  border-color: var(--hanko-dim);
+  background: rgba(156,59,46,0.08);
+}
+.made-note{
+  display:flex; align-items:center; gap:.5rem;
+  margin-top: .8rem; padding-top: .7rem;
+  border-top: 1px dashed var(--slate-line);
+  font-size: .76rem; color: var(--paper-faint);
+}
+.made-note .seal{
+  flex: none;
+  width: 1.35rem; height: 1.35rem; line-height: 1.3rem; text-align: center;
+  font-family: var(--font-display); font-size: .78rem;
+  color: var(--hanko); border: 1px solid var(--hanko-dim); border-radius: 2px;
+  background: rgba(156,59,46,0.07);
+}
+
+/* ---------- the pipeline strip ----------
+   Four plaques and three arrows. It exists because "a tool that writes files"
+   is abstract until you can see that the thing two sections down was made by
+   it, so the last plaque is deliberately the playable one. */
+.pipeline{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .5rem;
+  align-items: stretch;
+}
+@media (max-width: 860px){ .pipeline{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 460px){ .pipeline{ grid-template-columns: 1fr; } }
+
+.pipe-step{
+  position: relative;
+  border: 1px solid var(--slate-line);
+  background: var(--slate-850);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.1rem;
+}
+.pipe-step .jp{
+  font-family: var(--font-display);
+  font-size: .8rem; color: var(--wood-300); letter-spacing: .06em;
+}
+.pipe-step h4{
+  margin: .35rem 0 .3rem; font-size: .95rem; font-weight: 600;
+  font-family: var(--font-display);
+}
+.pipe-step p{ margin: 0; font-size: .82rem; color: var(--paper-dim); line-height: 1.6; }
+.pipe-step.end{ border-color: var(--wood-600); }
+.pipe-step.end .jp{ color: var(--wood-200); }
+
+/* The connecting mark. Hidden where the grid wraps, because an arrow pointing
+   at the edge of a column is worse than no arrow. */
+.pipe-step + .pipe-step::before{
+  content: "→";
+  position: absolute; left: -.42rem; top: 50%; transform: translateY(-50%);
+  color: var(--slate-600); font-size: .8rem; line-height: 1;
+}
+@media (max-width: 860px){ .pipe-step + .pipe-step::before{ display:none; } }
+
+/* ---------- hero facts ---------- */
+.hero-stats{
+  display: flex; flex-wrap: wrap; gap: .5rem .6rem;
+  margin: 1.6rem 0 0; padding: 0; list-style: none;
+}
+.hero-stats li{
+  font-size: .76rem; color: var(--paper-faint);
+  border: 1px solid var(--slate-line); border-radius: var(--radius);
+  padding: .3rem .7rem; background: rgba(20,24,26,0.5);
+}
+.hero-stats b{ color: var(--wood-200); font-weight: 600; }
+
 /* placeholder "coming soon" card */
 .card.placeholder{
   display:flex; align-items:center; justify-content:center;

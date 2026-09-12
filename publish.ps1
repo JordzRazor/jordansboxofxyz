@@ -24,8 +24,9 @@ $site = 'https://lemon-plant-0086fdd10.3.azurestaticapps.net'
 # C:\Users\South\<project>, but nothing website-shaped is stored in them.
 $webbench = 'C:\Users\South\webbench'
 $pages = @(
-    @{ Name = 'sniper'; Src = "$webbench\sniper-page"; Dest = 'sniper' },
-    @{ Name = 'zombie'; Src = "$webbench\zombie-page"; Dest = 'zombie' }
+    @{ Name = 'sniper';    Src = "$webbench\sniper-page";    Dest = 'sniper' },
+    @{ Name = 'zombie';    Src = "$webbench\zombie-page";    Dest = 'zombie' },
+    @{ Name = 'rougelike'; Src = "$webbench\rougelike-page"; Dest = 'rougelike' }
 )
 
 Push-Location $here
@@ -75,8 +76,23 @@ try {
 
     Write-Host '== publishing ==' -ForegroundColor Cyan
     $staged | ForEach-Object { Write-Host "   $_" }
-    git commit --quiet -m $Message
-    if ($LASTEXITCODE -ne 0) { throw 'commit failed.' }
+    # -F, not -m. PowerShell 5.1 re-parses a string on its way to a native
+    # command, so a double quote or an apostrophe in the message gets split
+    # into extra arguments and git reads the remainder as pathspecs -- it
+    # fails with "pathspec 'it' did not match any file(s)", which tells you
+    # nothing about quoting. A file has no quoting to get wrong, and it keeps
+    # multi-line messages intact as a bonus.
+    $msgFile = Join-Path ([System.IO.Path]::GetTempPath()) `
+                         ("sniper-commit-" + [guid]::NewGuid().ToString('N') + ".txt")
+    # No BOM: git would otherwise carry it into the first line of the message.
+    [System.IO.File]::WriteAllText($msgFile, $Message,
+                                   (New-Object System.Text.UTF8Encoding($false)))
+    try {
+        git commit --quiet -F $msgFile
+        if ($LASTEXITCODE -ne 0) { throw 'commit failed.' }
+    } finally {
+        Remove-Item $msgFile -Force -ErrorAction SilentlyContinue
+    }
 
     git push --quiet origin main
     if ($LASTEXITCODE -ne 0) { throw 'push failed.' }
@@ -121,7 +137,13 @@ try {
     # navigationFallback.exclude it comes back 200 as text/html instead of
     # 404ing, and the game dies on a content-type error. Watch the type, not
     # just the status.
-    foreach ($path in @('/', '/sniper/', '/sniper/sniper.user.js', '/zombie/', '/zombie/three.module.js')) {
+    # The download is versioned, so discover it rather than hardcode it: a name
+    # pinned here goes stale the first time the version moves, and would then
+    # verify a file nobody downloads while the real one 404s unnoticed.
+    $paths = @('/', '/sniper/', '/sniper/sniper.user.js', '/zombie/', '/zombie/three.module.js')
+    Get-ChildItem (Join-Path $here 'sniper') -Filter '*.zip' -ErrorAction SilentlyContinue |
+        ForEach-Object { $paths += "/sniper/$($_.Name)" }
+    foreach ($path in $paths) {
         try {
             $r = Invoke-WebRequest "$site$path" -UseBasicParsing -TimeoutSec 20
             "   {0,-26} {1}  {2} B  {3}" -f $path, $r.StatusCode, $r.RawContentLength, $r.Headers['Content-Type']
