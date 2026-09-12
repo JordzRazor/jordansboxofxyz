@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sniper — send text to the local relay
 // @namespace    south.sniper
-// @version      0.35.0
+// @version      0.38.0
 // @description  Ship code blocks / selections from a designated page to the sniper relay on 127.0.0.1:7355
 // @author       South
 // @run-at       document-idle
@@ -21,12 +21,15 @@
 // @match        https://chat.qwen.ai/*
 // @match        https://www.kimi.ai/*
 // @match        https://kimi.ai/*
+// @match        https://chatgpt.com/*
+// @match        https://chat.openai.com/*
+// @match        https://claude.ai/*
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  const VERSION = '0.35.0';
+  const VERSION = '0.38.0';
   const BASE  = 'http://127.0.0.1:7355';
   const KEY   = '__PASTE_YOUR_SNIPER_KEY__';
 
@@ -94,6 +97,11 @@
     root.style.setProperty('--sniper-hub-right', (SITE.ui.hubRight || '6px'));
     root.style.setProperty('--sniper-code-top', (SITE.ui.codeTop || '6px'));
     root.style.setProperty('--sniper-code-right', (SITE.ui.codeRight || '6px'));
+    // The bottom-left dock (launch pill, codebase, feedback, offer, env menu)
+    // is one stack; a site whose own furniture lives there (ChatGPT's sidebar
+    // footer) moves the whole stack with two numbers.
+    root.style.setProperty('--sniper-dock-left', (SITE.ui.dockLeft || '16px'));
+    root.style.setProperty('--sniper-dock-bottom', (SITE.ui.dockBottom || '16px'));
     console.log('[sniper] site adapter:', SITE.label, SITE);
   }
 
@@ -135,7 +143,7 @@
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
     (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  GM_addStyle(`
+  const STYLE = GM_addStyle(`
     .sniper-host { position: relative !important; }
     .sniper-btn {
       position: absolute; z-index: 2147483000;
@@ -199,19 +207,19 @@
     .sniper-toast-click { cursor: pointer; border-color: rgba(127,178,255,.5); }
     .sniper-toast-click:hover { background: rgba(30,42,66,.98); }
     .sniper-launch {
-      position: fixed; left: 16px; bottom: 16px; z-index: 2147483500;
+      position: fixed; left: var(--sniper-dock-left, 16px); bottom: var(--sniper-dock-bottom, 16px); z-index: 2147483500;
       font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
       padding: 9px 13px; border-radius: 999px; cursor: pointer;
       border: 1px solid rgba(127,127,127,.4); background: rgba(22,22,26,.9);
       color: #e8e8ea; opacity: .5; transition: opacity .12s, background .12s;
     }
     .sniper-launch:hover { opacity: 1; background: #2f6feb; border-color: #2f6feb; }
-    .sniper-codebase { left: 16px; bottom: 54px; }
+    .sniper-codebase { left: var(--sniper-dock-left, 16px); bottom: calc(var(--sniper-dock-bottom, 16px) + 38px); }
     .sniper-codebase:hover { background: #6b4bd6; border-color: #6b4bd6; }
-    .sniper-feedback { left: 16px; bottom: 92px; }
+    .sniper-feedback { left: var(--sniper-dock-left, 16px); bottom: calc(var(--sniper-dock-bottom, 16px) + 76px); }
     .sniper-feedback:hover { background: #a35a1f; border-color: #a35a1f; }
     .sniper-offer {
-      position: fixed; left: 16px; bottom: 180px; z-index: 2147483550;
+      position: fixed; left: var(--sniper-dock-left, 16px); bottom: calc(var(--sniper-dock-bottom, 16px) + 164px); z-index: 2147483550;
       display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       max-width: 460px; padding: 10px 12px; border-radius: 10px;
       font: 500 12.5px/1.4 ui-sans-serif, system-ui, sans-serif;
@@ -227,7 +235,7 @@
     .sniper-offer button:first-of-type { background: #2f6feb; border-color: #2f6feb; }
     .sniper-offer button:hover { filter: brightness(1.2); }
     .sniper-envs {
-      position: fixed; left: 16px; bottom: 134px; z-index: 2147483500;
+      position: fixed; left: var(--sniper-dock-left, 16px); bottom: calc(var(--sniper-dock-bottom, 16px) + 118px); z-index: 2147483500;
       background: rgba(18,18,22,.97); border: 1px solid rgba(255,255,255,.14);
       border-radius: 10px; padding: 6px; min-width: 240px;
       box-shadow: 0 10px 30px rgba(0,0,0,.5);
@@ -242,6 +250,25 @@
     .sniper-envs small { display: block; color: #9aa1ad; font-size: 11px; }
   `);
 
+  // ChatGPT (and any app that re-renders its root) throws away elements we
+  // append to <body>. Everything fixed-position lives in one host under
+  // <html> instead, and a keep-alive puts host and stylesheet back the moment
+  // either is disconnected. Position: fixed is unaffected by the parent.
+  const DOCK = document.createElement('div');
+  DOCK.className = 'sniper-dock';
+  function dock(el) {
+    if (!DOCK.isConnected) document.documentElement.appendChild(DOCK);
+    if (el && el.parentNode !== DOCK) DOCK.appendChild(el);
+    return el;
+  }
+  function keepAlive() {
+    if (!DOCK.isConnected) document.documentElement.appendChild(DOCK);
+    if (STYLE && !STYLE.isConnected) (document.head || document.documentElement).appendChild(STYLE);
+  }
+  new MutationObserver(keepAlive).observe(document.documentElement, { childList: true });
+  if (document.head) new MutationObserver(keepAlive).observe(document.head, { childList: true });
+  setInterval(keepAlive, 1500);
+
   let toastEl = null, toastTimer = null, toastAction = null;
   function toast(msg, ms = 2600, onClick = null) {
     if (!toastEl) {
@@ -250,7 +277,7 @@
       toastEl.addEventListener('click', () => {
         if (toastAction) { const f = toastAction; toastAction = null; f(); }
       });
-      document.body.appendChild(toastEl);
+      dock(toastEl);
     }
     toastEl.innerHTML = msg;
     toastAction = onClick;
@@ -1873,7 +1900,7 @@
           });
           envPanel.appendChild(b);
         }
-        document.body.appendChild(envPanel);
+        dock(envPanel);
       },
       onerror() { toast('<b>relay unreachable</b>\nis the relay running?', 4200); },
       ontimeout() { toast('<b>env list timed out</b>', 4000); },
@@ -2007,7 +2034,7 @@
       try { localStorage.setItem(RULES_ASKED, 'never'); } catch (_) {}
       bar.remove();
     });
-    document.body.appendChild(bar);
+    dock(bar);
 
     // If a reply starts arriving, the moment has passed - get out of the way.
     const obs = new MutationObserver(() => {
@@ -2027,7 +2054,7 @@
     ev.preventDefault();
     sendCodebase(ENV, ev.altKey ? 'map' : 'full');
   });
-  document.body.appendChild(codebase);
+  dock(codebase);
 
   // Closes the loop. The Placer's reasons for refusing a fragment are precise
   // and currently die in rejected\ - the chat sees silence, assumes the pipe is
@@ -2042,14 +2069,14 @@
     ev.preventDefault();
     sendCodebase(ENV, 'rejections');
   });
-  document.body.appendChild(feedback);
+  dock(feedback);
 
   launcher = document.createElement('button');
   launcher.className = 'sniper-launch';
   launcher.type = 'button';
   setEnv(ENV);
   launcher.addEventListener('click', (ev) => { ev.preventDefault(); envMenu(); });
-  document.body.appendChild(launcher);
+  dock(launcher);
   document.addEventListener('click', (ev) => {
     if (envPanel && !envPanel.contains(ev.target) && ev.target !== launcher) closeEnvPanel();
   }, true);
