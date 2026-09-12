@@ -17,6 +17,15 @@
   .terms{ border:1px solid var(--slate-line); border-radius: var(--radius); background: rgba(20,24,26,0.45); padding: 1.4rem clamp(1rem,3vw,1.8rem); }
   .terms h2{ font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 1.4rem 0 .5rem; color: var(--wood-200); }
   .terms h2:first-child{ margin-top: 0; }
+  .terms .short{ margin: .8rem 0 0; padding-left: 1.2rem; }
+  .terms .short li{ margin: .35rem 0; color: var(--paper); }
+  .terms .short b{ color: var(--wood-200); font-weight: 600; }
+  .terms details.full{ margin-top: 1.1rem; border-top: 1px dashed var(--slate-line); padding-top: .8rem; }
+  .terms summary{ cursor: pointer; color: var(--blue-200); font-size: .9rem; letter-spacing: .04em; list-style: none; }
+  .terms summary::-webkit-details-marker{ display: none; }
+  .terms summary::before{ content: "▸ "; color: var(--wood-300); }
+  .terms details[open] summary::before{ content: "▾ "; }
+  .terms details h2{ font-size: 1rem; margin: 1.1rem 0 .3rem; }
   .terms p, .terms li{ color: var(--paper-dim); font-size: .93rem; }
   .terms .ver{ color: var(--paper-faint); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
   .agree{ display:flex; gap:.9rem; align-items:flex-start; margin: 1.4rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--slate-line); }
@@ -48,8 +57,7 @@
 <div class="wrap">
   <p class="eyebrow">約束 · the terms</p>
   <h1><span class="metal">Look all you like.</span> To take something home, sign in and agree.</h1>
-  <p class="lede">Everything on the shelf can be played and tried without an account. Downloading the tools
-  asks for one thing: that you agree, on the record, to the terms below.</p>
+  <p class="lede">Play and try anything without an account. Downloading asks for one thing: agree, on the record, to the terms.</p>
 
   <div class="state" id="state">
     <span class="muted">checking who you are…</span>
@@ -58,47 +66,38 @@
   <section class="terms" id="terms">
     <div class="ver">terms · version <span id="ver">2026-09-12</span></div>
 
-    <h2>Whose it is</h2>
-    <p>Everything you can download here — sniper, its source, the application, the userscript, and
-    the games and tools that follow — is the work and property of <b><a href="https://www.reddit.com/r/youspiritually/" target="_blank" rel="noopener noreferrer">youspiritually</a></b>, built
-    with Claude. All rights are reserved. Copyright in it lasts for the author's life and seventy
-    years after, and these terms last as long as the copyright does.</p>
-
-    <h2>What you may do</h2>
-    <ul>
-      <li>Download it, install it, run it, and use it for your own work.</li>
-      <li>Read every line of the source. It ships in the zip so that you can.</li>
-      <li>Change it for your own use, on your own machines.</li>
+    <ul class="short">
+      <li><b>Yours to run, read and change</b> for yourself. The source is in the zip.</li>
+      <li><b>Not yours to pass on</b>: no redistributing, publishing, selling, or lifting code, designs or text into other projects.</li>
+      <li><b>On the record</b>: your sign-in account, this terms version, the time, your address and browser; each download the same. Kept as long as the copyright is, which is long.</li>
     </ul>
-
-    <h2>What you may not do</h2>
-    <ul>
-      <li>Redistribute it, in whole or in part, in any form — the zip, the binaries, or the source,
-      original or modified.</li>
-      <li>Publish it, sell it, or offer it as your own or as part of another product or project.</li>
-      <li>Copy code, designs, or text out of it into other software, whether or not that software
-      is open source.</li>
-      <li>Remove or alter the notices of who made it.</li>
-    </ul>
-    <p>Source you can read is not source you own. This is <b>source-available</b>, not open source.</p>
-
-    <h2>The record</h2>
-    <p>When you tick the box, this site writes down the account you signed in with (the provider and
-    its id, and the name or email that provider gives us), the version of these terms you were shown,
-    the time, your network address and browser. Each download is written down the same way. That
-    record is kept for as long as copyright in the work subsists. If the work turns up somewhere it
-    should not, the record is how the breach is traced.</p>
-
-    <h2>If the terms are broken</h2>
-    <p>Your permission to use the work ends, and the record is evidence. Nothing here limits any other
-    right the author has.</p>
-
-    <h2>No promises</h2>
-    <p>It is provided as it is. It reads the page you point it at and writes files where you tell it
-    to; use it with care, and keep backups, as it does.</p>
-
-    <h2>Changes</h2>
-    <p>New terms get a new version and ask for a new agreement. Old acceptances stay on record.</p>
+    <details class="full">
+      <summary>the full terms</summary>
+      <h2>Whose it is</h2>
+      <p>Everything you can download here is the work and property of <b><a href="https://www.reddit.com/r/youspiritually/" target="_blank" rel="noopener noreferrer">youspiritually</a></b>, built with Claude. All rights reserved, for as long as copyright lasts.</p>
+      <h2>What you may do</h2>
+      <ul>
+        <li>Download it, install it, run it, use it for your own work.</li>
+        <li>Read every line of the source.</li>
+        <li>Change it for your own use, on your own machines.</li>
+      </ul>
+      <h2>What you may not do</h2>
+      <ul>
+        <li>Redistribute it, in whole or in part, in any form: zip, binaries or source, original or modified.</li>
+        <li>Publish it, sell it, or offer it as your own or as part of another product or project.</li>
+        <li>Copy code, designs or text out of it into other software, open source or not.</li>
+        <li>Remove or alter the notices of who made it.</li>
+      </ul>
+      <p>Source you can read is not source you own. Source-available, not open source.</p>
+      <h2>The record</h2>
+      <p>Ticking the box writes down the account you signed in with (provider, id, and the name or email it gives us), the terms version shown, the time, your network address and browser. Each download is written down the same way. The record is kept as long as copyright in the work subsists, and it is how a breach gets traced.</p>
+      <h2>If the terms are broken</h2>
+      <p>Your permission ends, the record is evidence, and nothing here limits any other right the author has.</p>
+      <h2>No promises</h2>
+      <p>Provided as it is. It reads the page you point it at and writes files where you tell it to. Keep backups; it does.</p>
+      <h2>Changes</h2>
+      <p>New terms get a new version and ask for a new agreement. Old acceptances stay on record.</p>
+    </details>
 
     <div class="agree" id="agree" hidden>
       <input type="checkbox" id="tick">
