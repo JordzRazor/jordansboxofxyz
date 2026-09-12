@@ -122,7 +122,7 @@
 
     <div class="get">
       <a class="btn big" href="/api/download?file=sniperx-1.3.0.zip">Download sniperx 1.3.0</a>
-      <span class="getmeta">sniperx-1.3.0.zip · <b>76 MB</b> · Windows 10/11 x64 · source included<br>
+      <span class="getmeta">sniperx-1.3.0.zip · <b>76 MB</b> · Windows 10/11 x64 · <a href="#mac" style="color:var(--wood-300)">macOS coming</a> · source included<br>
         sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip</span>
     </div>
 
@@ -171,7 +171,7 @@
 
     <div class="get">
       <a class="btn big" href="/api/download?file=sniper-0.36.0.zip">Download sniper 0.38.0</a>
-      <span class="getmeta">sniper-0.36.0.zip · <b>156 KB</b> · Windows · source included<br>
+      <span class="getmeta">sniper-0.36.0.zip · <b>156 KB</b> · Windows · <a href="#mac" style="color:var(--wood-300)">macOS coming</a> · source included<br>
         sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip</span>
     </div>
 
@@ -204,6 +204,14 @@
       </li>
     </ol>
   </section>
+
+  <div class="note" id="mac"><b>On a Mac?</b> Not yet — both downloads are Windows today, and
+  <b>macOS is coming</b>. The userscript half is already cross-platform (it runs in whichever
+  browser you use) and the relay is plain Python, so that path needs a front door that isn't a
+  <code>.bat</code> and honest testing on a real Mac. It lands first. The app is the heavier lift:
+  its window is Edge's WebView2 and its core is compiled for Windows, so a Mac version is a
+  rebuild rather than a switch. Neither gets announced here until it has actually run on
+  someone's Mac.</div>
 
   <h2><span class="jp">経路</span>Where the text goes</h2>
   <pre class="flow">your chat tab   --click-->   <b>127.0.0.1:7355</b>   (loopback only, on your PC)
