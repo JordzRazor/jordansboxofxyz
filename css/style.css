@@ -72,21 +72,29 @@ body{
   font-size: 1.02rem;
   line-height: 1.72;
   letter-spacing: .004em;
-  /* No -webkit-font-smoothing / -moz-osx-font-smoothing here on purpose.
-     Both only fire on macOS, and there they force grayscale AA: thinner,
-     flatter type than the subpixel rendering the platform would give.
-     text-rendering: optimizeLegibility is gone too -- kern and liga are
-     already asked for explicitly on the next line. What still loses
-     subpixel AA does so by compositing, not by a smoothing switch:
-     .metal paints through a background-clip mask, and anything behind a
-     backdrop-filter is on its own layer. Those are design choices, and
-     they stay. */
+  /* Grayscale antialiasing, softer edges, no RGB fringing on the stems.
+     Both of these are macOS-only -- the platform quietly no-ops them on
+     Windows, which is why turning them off and on changes nothing here and
+     everything on a Mac. The Windows lever is one line down. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "kern", "liga", "palt";
 }
 
 /* Display type: a hair of tracking, weight held back so the strokes stay
-   clean at every size, and a brushed sheen on the largest words. */
-h1, h2, h3, h4, .brand{ letter-spacing: .012em; font-feature-settings: "kern", "liga", "dlig"; }
+   clean at every size, and a brushed sheen on the largest words.
+
+   geometricPrecision is the Windows half of the smoothing answer. The default
+   grid-fits glyphs to the pixel lattice, and on a high-contrast serif that
+   snapping is exactly what squares off the corners of a curve. This asks for
+   exact outlines and subpixel positioning instead: rounder, a shade softer.
+   Display sizes only -- at body sizes that grid-fitting still earns its keep,
+   and taking it away there reads as mush rather than as smooth. */
+h1, h2, h3, h4, .brand{
+  letter-spacing: .012em;
+  font-feature-settings: "kern", "liga", "dlig";
+  text-rendering: geometricPrecision;
+}
 .metal{
   background: linear-gradient(105deg, var(--paper) 0%, #f7f3e6 30%, var(--wood-200) 52%, var(--paper) 78%, var(--paper-dim) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -96,27 +104,28 @@ code, pre, kbd{ font-variant-ligatures: none; }
 img{ max-width: 100%; display:block; }
 a{ color: inherit; }
 
-/* subtle wood-grain + charcoal texture, pure CSS, no image weight */
+/* The charcoal ground.
+   There used to be a 1px repeating stripe in here, 1px on and 2px off at
+   100deg. That is a dither pattern sitting behind every word on the page, and
+   a 1px comb never survives a fractional device pixel ratio: at 125% or 150%
+   scaling it resamples into a moire that beats against the glyph edges. The
+   type was never the problem -- the ground under it was, and text on it reads
+   speckled and cornery. The depth here comes from the two radial washes
+   instead; broad gradients have no high-frequency detail to alias. */
 .grain-bg{
   position: relative;
   background:
-    repeating-linear-gradient(100deg,
-      rgba(255,255,255,0.015) 0px,
-      rgba(255,255,255,0.015) 1px,
-      transparent 1px,
-      transparent 3px),
     radial-gradient(ellipse at 18% -12%, rgba(42,92,176,0.16), transparent 55%),
     radial-gradient(ellipse at 92% 112%, rgba(191,156,74,0.10), transparent 55%),
     var(--ink);
 }
 
-/* brushed metal, pure CSS: fine horizontal grain over graphite, one gold
-   hairline at the top edge, the faintest blue in the shadow */
+/* Brushed metal: one gold hairline at the top edge, the faintest blue in the
+   shadow. Its 1px horizontal comb is gone for the same reason as above -- the
+   tip jar, the cards and the pipeline plaques all carry text, and that stripe
+   was directly behind it. The sheen does the work now. */
 .wood-panel{
   background:
-    repeating-linear-gradient(180deg,
-      rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px,
-      transparent 1px, transparent 3px),
     linear-gradient(90deg, rgba(216,185,104,0.10), transparent 30%, transparent 70%, rgba(107,152,230,0.08)),
     linear-gradient(165deg, var(--slate-700), var(--slate-800) 55%, var(--blue-900));
   border: 1px solid rgba(0,0,0,0.45);
