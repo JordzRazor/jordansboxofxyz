@@ -32,7 +32,19 @@ $pages = @(
 
 Push-Location $here
 try {
-    # --- 1. build the generated pages ------------------------------------
+    # --- 1. the stylesheet -----------------------------------------------
+    # Before any page, and not optional: stylesheet\build.py assembles
+    # css\style.css out of its modules, then writes the hash of what it built
+    # into every page that links it -- the repo's pages AND the page builders'
+    # sources. A page built before that stamp would ship pointing at the
+    # previous sheet, which is exactly how the cache-buster went stale by hand.
+    if (-not $SkipBuild) {
+        Write-Host '== rebuilding the stylesheet ==' -ForegroundColor Cyan
+        python 'C:\Users\South\webbench\stylesheet\build.py'
+        if ($LASTEXITCODE -ne 0) { throw 'stylesheet: build.py failed - nothing published.' }
+    }
+
+    # --- 2. build the generated pages ------------------------------------
     # Each page builds into its own dist\ and is copied wholesale. Never
     # hand-copy sniper.user.js: the working copy has the relay key inline and
     # build.py is what strips it. Copying by hand publishes the key.
@@ -70,7 +82,7 @@ try {
         }
     }
 
-    # --- 2. the canonical host -------------------------------------------
+    # --- 3. the canonical host -------------------------------------------
     # Azure gives every app a *.azurestaticapps.net hostname, will not turn it
     # off, and staticwebapp.config.json cannot redirect it: routes match on
     # path, never on host. So the redirect to jordansboxof.xyz is one line of
@@ -101,7 +113,7 @@ try {
             Write-Host "   canonical redirect -> $($_.FullName.Substring($here.Length + 1))" -ForegroundColor DarkGray
         }
 
-    # --- 3. commit -------------------------------------------------------
+    # --- 4. commit -------------------------------------------------------
     git add -A
     $staged = git diff --cached --name-only
     if (-not $staged) { Write-Host 'nothing to publish - working tree clean.' -ForegroundColor Yellow; return }
@@ -133,7 +145,7 @@ try {
     Write-Host "pushed $($sha.Substring(0,8))" -ForegroundColor Green
     if ($NoWait) { return }
 
-    # --- 4. wait ---------------------------------------------------------
+    # --- 5. wait ---------------------------------------------------------
     # Key the wait to THIS commit. Asking for "the latest run" right after a
     # push returns the PREVIOUS run -- GitHub has not registered the new one
     # yet -- so it reports the last deploy's success and you believe a deploy
@@ -161,7 +173,7 @@ try {
         throw "deploy did not succeed (status: $(if($status){$status}else{'timed out'})). See https://github.com/$repo/actions"
     }
 
-    # --- 5. prove it -----------------------------------------------------
+    # --- 6. prove it -----------------------------------------------------
     # A green check means the Action ran, not that the bytes changed. Azure's
     # edge can lag a little, so confirm what is actually being served.
     Write-Host '== verifying the live site ==' -ForegroundColor Cyan

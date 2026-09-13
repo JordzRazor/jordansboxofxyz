@@ -1,4 +1,14 @@
 /* ==========================================================================
+   GENERATED FILE -- do not edit.
+
+   Assembled by webbench\stylesheet\build.py from src\*.css, in filename
+   order. Edit a module there and run the build; publish.ps1 runs it first,
+   before any page, so every page ships linking this exact content.
+
+   modules: 00-import.css, 10-tokens.css, 20-base.css, 30-texture.css, 40-layout.css, 50-hero.css, 60-section-heads.css, 70-cards.css, 75-pipeline.css, 80-hero-facts.css, 90-about.css, 95-demo.css, 99-misc.css
+   ========================================================================== */
+
+/* ==========================================================================
    jordansboxofxyz - shared theme
    Qi. Black lacquer and graphite, brushed silver for the words, a thread of
    gold for what matters, and a deep blue that the metals sit against. Yin and
@@ -62,9 +72,15 @@ body{
   font-size: 1.02rem;
   line-height: 1.72;
   letter-spacing: .004em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  /* No -webkit-font-smoothing / -moz-osx-font-smoothing here on purpose.
+     Both only fire on macOS, and there they force grayscale AA: thinner,
+     flatter type than the subpixel rendering the platform would give.
+     text-rendering: optimizeLegibility is gone too -- kern and liga are
+     already asked for explicitly on the next line. What still loses
+     subpixel AA does so by compositing, not by a smoothing switch:
+     .metal paints through a background-clip mask, and anything behind a
+     backdrop-filter is on its own layer. Those are design choices, and
+     they stay. */
   font-feature-settings: "kern", "liga", "palt";
 }
 

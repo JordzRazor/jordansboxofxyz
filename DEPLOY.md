@@ -31,12 +31,12 @@ its URL.
 `jordansboxof.xyz` is the address. The `*.azurestaticapps.net` host still
 answers on everything -- Azure will not turn it off, and
 `staticwebapp.config.json` cannot redirect it, because routes match on path and
-never on host. So step 2 of `publish.ps1` injects a one-line redirect into the
+never on host. So step 3 of `publish.ps1` injects a one-line redirect into the
 `<head>` of every `.html` in the tree on its way out, marked with
 `data-canonical-host` so it is written once and never twice. Anyone landing on
 the Azure host is moved to the custom domain, path and query intact.
 
-It is deliberately invisible to `curl`: the verification step in step 5 still
+It is deliberately invisible to `curl`: the verification step in step 6 still
 fetches the Azure host and still gets 200s, because the redirect is JavaScript
 and only a browser runs it.
 
