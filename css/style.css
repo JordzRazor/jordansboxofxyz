@@ -228,20 +228,30 @@ main{ min-height: 60vh; }
   pointer-events: none;
 }
 .hero-content{ position: relative; z-index: 2; max-width: 46rem; }
-/* the yin-yang: one disc, gold turning into blue, barely there */
+/* the yin-yang: one disc, gold turning into blue, barely there -- a true taijitu, drawn with gradients only.
+   Gold left half, blue right half; two half-size lobes stacked top and bottom bulge each colour into the other
+   (blue into gold above, gold into blue below) and that is the S-curve; each lobe carries an eye of the other
+   colour at its centre, a sixth of the disc's radius. Each layer is its own sized box: "closest-side" makes the
+   circle exactly fill it. It turns once every two minutes (transform only, so the GPU does it; off for anyone
+   who asks for reduced motion). */
 .hero::after{
   content:""; position:absolute; z-index:1; pointer-events:none;
   right: clamp(-6rem, -4vw, 2rem); top: 50%; width: clamp(18rem, 36vw, 30rem); aspect-ratio: 1;
   transform: translateY(-50%);
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 25%, var(--ink) 0 7%, transparent 7.5%),
-    radial-gradient(circle at 50% 75%, var(--wood-300) 0 7%, transparent 7.5%),
-    conic-gradient(from 90deg, var(--wood-400) 0 50%, var(--blue-700) 50% 100%);
+    radial-gradient(circle closest-side, var(--wood-300) 0 31%, transparent 33.5%) 50% 0    / 50% 50% no-repeat,
+    radial-gradient(circle closest-side, var(--blue-700) 0 31%, transparent 33.5%) 50% 100% / 50% 50% no-repeat,
+    radial-gradient(circle closest-side, var(--blue-700) 0 99.6%, transparent 100%) 50% 0    / 50% 50% no-repeat,
+    radial-gradient(circle closest-side, var(--wood-400) 0 99.6%, transparent 100%) 50% 100% / 50% 50% no-repeat,
+    linear-gradient(90deg, var(--wood-400) 0 50%, var(--blue-700) 50% 100%);
   opacity: .09;
   mask: radial-gradient(circle, black 60%, transparent 71%);
   -webkit-mask: radial-gradient(circle, black 60%, transparent 71%);
+  animation: taiji-turn 120s linear infinite;
 }
+@keyframes taiji-turn{ from{ transform: translateY(-50%) rotate(0deg); } to{ transform: translateY(-50%) rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){ .hero::after{ animation: none; } }
 .eyebrow{
   display:inline-flex; align-items:center; gap:.6rem;
   font-size: .75rem; letter-spacing: .22em; text-transform: uppercase;
