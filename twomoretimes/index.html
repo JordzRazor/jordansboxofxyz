@@ -50,12 +50,28 @@
       return true;
     });
   }
+  var stage = "checking your membership";
+  function fail(e) {                                       // every failure says where it happened and why, on the page itself
+    console.error(e);
+    say("The game could not start (" + stage + "): " + (e && e.message ? e.message : String(e)));
+  }
+  function b64bytes(t) {                                   // /api/play sends the game as base64 text: text crosses every proxy untouched
+    var s = atob(t.replace(/\s+/g, "")), u = new Uint8Array(s.length);
+    for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
+    return u.buffer;
+  }
   function fetchGame() {
-    msg.textContent = "Loading the game…"; act.innerHTML = "";
+    stage = "downloading the game"; msg.textContent = "Loading the game…"; act.innerHTML = "";
     return fetch(GAME_URL, { cache: "no-store", credentials: "same-origin" }).then(function (r) {
       if (r.status === 401 || r.status === 403) { say("Sign in and agree to the terms to play.", TERMS, "Continue"); return null; }
-      if (!r.ok) { say("The game could not be loaded (" + r.status + "). Try again in a moment."); return null; }
-      return r.arrayBuffer();
+      if (!r.ok) { say("The game could not be loaded (HTTP " + r.status + "). Try again in a moment."); return null; }
+      var type = r.headers.get("content-type") || "";
+      return (/wasm|octet-stream/.test(type) ? r.arrayBuffer() : r.text().then(b64bytes)).then(function (buf) {
+        var b = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));   // every WebAssembly module starts "\0asm"
+        if (b.length < 4 || b[0] !== 0 || b[1] !== 0x61 || b[2] !== 0x73 || b[3] !== 0x6d)
+          throw new Error("the download is not the game (" + buf.byteLength + " bytes of " + (type || "unknown type") + ")");
+        return buf;
+      });
     });
   }
 
@@ -91,22 +107,31 @@
 
   check().then(function (ok) { return ok ? fetchGame() : null; }).then(function (wasm) {
     if (!wasm) return;
+    stage = "starting the game"; msg.textContent = "Starting…";
     canvas.hidden = false; size();
     return createTwomoretimes({
-      wasmBinary: wasm,
+      // hand the loader the game we fetched. NOT `wasmBinary`: this Emscripten no longer reads it from the page and silently
+      // fetches twomoretimes.wasm from beside the page instead -- which is (deliberately) not on the site. instantiateWasm is the
+      // supported hook for "here is the module".
+      instantiateWasm: function (imports, done) {
+        WebAssembly.instantiate(wasm, imports).then(function (r) { done(r.instance, r.module); }, fail);
+        return {};
+      },
       ctx: canvas.getContext("2d", { alpha: false }),
       onQuit: function () { location.href = "/"; },
       print: function () {}, printErr: function (t) { console.warn(t); }
     }).then(function (M) {
-      game = M;
+      game = M; stage = "opening your saves";
       M.FS.mkdir("/app");
-      M.FS.mount(M.FS.filesystems.IDBFS, {}, "/app");      // your saves (maps, profiles, controls) live in this browser
-      M.FS.syncfs(true, function () {
-        wire(); gate.remove(); canvas.focus();
-        M._web_start(W, H);
+      try { M.FS.mount(M.FS.filesystems.IDBFS, {}, "/app"); }   // your saves (maps, profiles, controls) live in this browser
+      catch (e) { console.warn("twomoretimes: no browser storage, saves last until the tab closes", e); }
+      M.FS.syncfs(true, function (e) {
+        if (e) console.warn("twomoretimes: could not read saves", e);
+        stage = "running the game";
+        try { wire(); M._web_start(W, H); gate.remove(); canvas.focus(); } catch (e2) { canvas.hidden = true; fail(e2); }
       });
     });
-  }).catch(function (err) { console.error(err); say("Something went wrong loading the game."); });
+  }).catch(function (err) { canvas.hidden = true; fail(err); });
 })();
 </script>
 </body>
