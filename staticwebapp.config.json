@@ -95,12 +95,6 @@
   },
   "auth": {
     "identityProviders": {
-      "google": {
-        "registration": {
-          "clientIdSettingName": "GOOGLE_CLIENT_ID",
-          "clientSecretSettingName": "GOOGLE_CLIENT_SECRET"
-        }
-      },
       "github": {
         "registration": {
           "clientIdSettingName": "GITHUB_CLIENT_ID",
@@ -112,6 +106,35 @@
           "openIdIssuer": "https://login.microsoftonline.com/common/v2.0",
           "clientIdSettingName": "AZURE_CLIENT_ID",
           "clientSecretSettingName": "AZURE_CLIENT_SECRET"
+        },
+        "login": {
+          "loginParameters": [
+            "prompt=select_account"
+          ]
+        }
+      },
+      "customOpenIdConnectProviders": {
+        "googleaccount": {
+          "registration": {
+            "clientIdSettingName": "GOOGLE_CLIENT_ID",
+            "clientCredential": {
+              "clientSecretSettingName": "GOOGLE_CLIENT_SECRET"
+            },
+            "openIdConnectConfiguration": {
+              "wellKnownOpenIdConfiguration": "https://accounts.google.com/.well-known/openid-configuration"
+            }
+          },
+          "login": {
+            "nameClaimType": "email",
+            "scopes": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "loginParameterNames": [
+              "prompt=select_account"
+            ]
+          }
         }
       }
     }

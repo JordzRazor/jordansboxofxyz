@@ -178,7 +178,7 @@ fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
     state.innerHTML = '<p style="margin:0 0 .9rem"><b>Step one:</b> sign in. No password is made here — '
       + 'GitHub, Google or Microsoft confirms who you are, and this site keeps only what section 6 lists.</p>'
       + '<div class="providers">'
-      + '<a class="btn" href="/.auth/login/google?post_login_redirect_uri=' + back + '">Sign in with Google</a>'
+      + '<a class="btn" href="/.auth/login/googleaccount?post_login_redirect_uri=' + back + '">Sign in with Google</a>'
       + '<a class="btn ghost" href="/.auth/login/github?post_login_redirect_uri=' + back + '">Sign in with GitHub</a>'
       + '<a class="btn ghost" href="/.auth/login/aad?post_login_redirect_uri=' + back + '">Sign in with Microsoft</a>'
       + '</div>';
