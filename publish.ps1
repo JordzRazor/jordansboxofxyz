@@ -27,7 +27,8 @@ $pages = @(
     @{ Name = 'sniper';    Src = "$webbench\sniper-page";    Dest = 'sniper' },
     @{ Name = 'zombie';    Src = "$webbench\zombie-page";    Dest = 'zombie' },
     @{ Name = 'rougelike'; Src = "$webbench\rougelike-page"; Dest = 'rougelike' },
-    @{ Name = 'grip';      Src = "$webbench\grip-page";      Dest = 'grip' }
+    @{ Name = 'grip';      Src = "$webbench\grip-page";      Dest = 'grip' },
+    @{ Name = 'twomoretimes'; Src = "$webbench\twomoretimes-page"; Dest = 'twomoretimes' }
 )
 
 Push-Location $here

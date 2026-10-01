@@ -24,6 +24,8 @@
   .btn.big{ font-size:1.02rem; padding:.95rem 1.8rem; font-family:var(--font-display); font-weight:700; }
   .getmeta{ color: var(--paper-faint); font-size:.82rem; }
   .getmeta b{ color: var(--wood-300); font-weight:600; }
+  .getmeta .sha{ font-family:ui-monospace,Consolas,monospace; font-size:.72rem; color:var(--paper-faint);
+    word-break:break-all; user-select:all; }
 
   h2{ font-family: var(--font-display); font-weight:700;
     font-size: clamp(1.15rem,2.4vw,1.4rem);
@@ -123,8 +125,15 @@
     <div class="get">
       <a class="btn big" href="/api/download?file=sniperx-1.3.0.zip">Download sniperx 1.3.0</a>
       <span class="getmeta">sniperx-1.3.0.zip · <b>76 MB</b> · Windows 10/11 x64 · Mac soon · source included<br>
-        sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip</span>
+        sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip<br>
+        sha256 <code class="sha" title="Get-FileHash sniperx-1.3.0.zip in PowerShell must print this">d3732bc000495fabd2a064769add787a342a762cfd19ce3f490210de6690c467</code></span>
     </div>
+
+    <div class="note"><b>Your browser may call the download dangerous.</b> Chrome, Firefox, Opera and
+    SmartScreen judge a program by who signed it and how many people have run it. This build is new
+    and, until the signing certificate lands, unsigned, so they hedge — it is not a verdict on what
+    the program does. Check the SHA-256 above against <code>Get-FileHash</code> on what you got,
+    then Keep / More info → Run anyway. Signed builds are next, and the warning goes with them.</div>
 
     <div class="needs">
       <span class="chip"><b>Needs:</b> nothing — no Python, no .NET to install</span>
@@ -172,7 +181,8 @@
     <div class="get">
       <a class="btn big" href="/api/download?file=sniper-0.36.0.zip">Download sniper 0.38.0</a>
       <span class="getmeta">sniper-0.36.0.zip · <b>156 KB</b> · Windows · Mac soon · source included<br>
-        sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip</span>
+        sign in and agree to <a href="/terms/?next=%2Fsniper%2F" style="color:var(--wood-300)">the terms</a> once; instructions are inside the zip<br>
+        sha256 <code class="sha" title="Get-FileHash sniper-0.36.0.zip in PowerShell must print this">5280146de2519eef787faa243c0b750c12de7095908f315f6855e0ee2be681e6</code></span>
     </div>
 
     <div class="needs">

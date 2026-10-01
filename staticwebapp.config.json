@@ -11,6 +11,7 @@
       "/zombie/*",
       "/rougelike/*",
       "/grip/*",
+      "/twomoretimes/*",
       "/*.{png,jpg,gif,svg,ico,json,txt}",
       "/terms/*",
       "/api/*"
@@ -61,6 +62,12 @@
     },
     {
       "route": "/terms/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
+      "route": "/twomoretimes/*",
       "headers": {
         "Cache-Control": "no-cache"
       }

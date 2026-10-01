@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>jordansboxofxyz — a small shop of interactive things</title>
-<meta name="description" content="A small, quiet shop of games that run in the browser and tools that run on your machine. Free to play; sign in once to download." />
+<meta name="description" content="A small, quiet shop of games that run in the browser and tools that run on your machine. Free, with one account and one set of terms." />
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
 <link rel="manifest" href="assets/manifest.webmanifest" />
 <link rel="stylesheet" href="css/style.css?v=220c47d9" />
@@ -32,13 +32,13 @@
     <div class="hero-content">
       <p class="eyebrow">開店中 · open for business · 気</p>
       <h1><span class="metal">A small shop</span> of things to <em>play</em> and things to <em>download</em>.</h1>
-      <p>Games that run in the browser. Tools that run on your own machine. Nothing to sign into to play; one sign-in to download, and the source comes with it.</p>
+      <p>Games that run in the browser. Tools that run on your own machine. One free account and one set of terms covers everything on the shelf.</p>
       <div style="display:flex; gap:.9rem; flex-wrap:wrap;">
         <a class="btn" href="#gallery">Browse the shelf</a>
       </div>
       <ul class="hero-stats">
-        <li><b>Source included</b> · read every line</li>
-        <li><b>No account to play</b> · one to download</li>
+        <li><b>Free</b> · nothing here costs anything</li>
+        <li><b>One account</b> · sign the terms once</li>
         <li>Runs fine on <b>an old laptop</b></li>
       </ul>
     </div>
@@ -47,9 +47,24 @@
   <section class="section" id="gallery">
     <div class="section-head">
       <h2>The shelf</h2>
-      <span class="count">6 pieces, more being carved</span>
+      <span class="count">7 pieces, more being carved</span>
     </div>
     <div class="gallery">
+
+      <a class="card" href="/twomoretimes/">
+        <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:var(--font-display); font-size:2.6rem; color:rgba(233,222,200,0.18);" aria-hidden="true">二回</span>
+        </div>
+        <div class="card-body">
+          <span class="card-tag">members · sign in to play</span>
+          <h3>twomoretimes</h3>
+          <p>A bike that loves rolling, on physics built from first principles. Ride, flip, draw your own lines. Arrows to flip, Z to turn around.</p>
+          <div class="card-foot">
+            <span><span class="status-dot"></span>runs in the browser</span>
+            <span>play →</span>
+          </div>
+        </div>
+      </a>
 
       <a class="card" href="/sniper/">
         <div class="card-media wood-panel" style="display:flex;align-items:center;justify-content:center;">
@@ -161,7 +176,7 @@
         <ul>
           <li>Gentle on old laptops: capped particle counts, and everything pauses when the tab is hidden.</li>
           <li>WebGPU pieces fall back to WebGL on their own. Nothing just breaks.</li>
-          <li>No accounts, no tracking, no dark patterns.</li>
+          <li>One account, no ads, no third-party trackers, no dark patterns.</li>
         </ul>
       </div>
     </div>
@@ -174,7 +189,7 @@
       <div class="tipjar-text">
         <span class="jp" aria-hidden="true">御礼</span>
         <h3>You like? Give money and I will build more tools.</h3>
-        <p>That is the whole pitch. Nothing here costs anything, and the source is in the zip,
+        <p>That is the whole pitch. Nothing here costs anything,
         so the only way to say thanks is to throw some cheddar in the jar. Tips go straight back
         into evenings spent building the next thing on the shelf.</p>
       </div>

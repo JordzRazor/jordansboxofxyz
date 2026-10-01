@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script data-canonical-host>(function(){var h=location.hostname;if(h!=="jordansboxof.xyz"&&/\.azurestaticapps\.net$/i.test(h)){location.replace("https://jordansboxof.xyz"+location.pathname+location.search+location.hash);}})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>twomoretimes — jordansboxofxyz</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0e14; }
+  #game { display: block; width: 100vw; height: 100vh; cursor: crosshair; outline: none; }
+  #gate { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #0b0e14;
+          color: #d8e2f4; font: 15px/1.6 ui-monospace, Consolas, monospace; text-align: center; }
+  #gate .box { max-width: 30rem; padding: 2rem; border: 1px solid #3a5a88; background: #141c2b; }
+  #gate h1 { margin: 0 0 .6rem; font-size: 1.6rem; color: #5cffb0; letter-spacing: .08em; }
+  #gate p { margin: .6rem 0; color: #8fa0be; }
+  #gate a.btn { display: inline-block; margin-top: .8rem; padding: .55rem 1.2rem; border: 1px solid #ffb347; color: #ffb347; text-decoration: none; }
+  #gate a.btn:hover { background: #3a2a10; }
+  #gate a.home { color: #5a78a8; font-size: .85rem; }
+</style>
+</head>
+<body>
+<canvas id="game" tabindex="0" hidden></canvas>
+<div id="gate"><div class="box"><h1>TWOMORETIMES</h1><p id="msg">Loading…</p><div id="act"></div></div></div>
+<script src="twomoretimes.js"></script>
+<script>
+// twomoretimes in the browser: the same C++ game (physics, renderer, menus) compiled to WebAssembly. It draws its own frame into memory;
+// this page puts that frame on the canvas and hands it the keyboard and mouse.
+(function () {
+  "use strict";
+  var GATED = true;                                   // the public page: members only (signed in + current terms agreed)
+  var GAME_URL = "/api/play?game=twomoretimes";
+  var HERE = "/twomoretimes/";
+  var gate = document.getElementById("gate"), msg = document.getElementById("msg"), act = document.getElementById("act");
+  var canvas = document.getElementById("game");
+
+  function say(text, link, label) {
+    msg.textContent = text;
+    act.innerHTML = "";
+    if (link) { var a = document.createElement("a"); a.className = "btn"; a.href = link; a.textContent = label; act.appendChild(a); }
+    var h = document.createElement("p"); h.innerHTML = '<a class="home" href="/">← jordansboxof.xyz</a>'; act.appendChild(h);
+  }
+  var TERMS = "/terms/?next=" + encodeURIComponent(HERE);
+
+  function check() {
+    if (!GATED) return Promise.resolve(true);
+    return fetch("/api/me", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (me) {
+      if (!me.signedIn) { say("twomoretimes is for members. Sign in and agree to the terms to play.", TERMS, "Sign in"); return false; }
+      if (!me.accepted) { say("One step left: agree to the current terms to play.", TERMS, "Read and agree"); return false; }
+      return true;
+    });
+  }
+  function fetchGame() {
+    msg.textContent = "Loading the game…"; act.innerHTML = "";
+    return fetch(GAME_URL, { cache: "no-store", credentials: "same-origin" }).then(function (r) {
+      if (r.status === 401 || r.status === 403) { say("Sign in and agree to the terms to play.", TERMS, "Continue"); return null; }
+      if (!r.ok) { say("The game could not be loaded (" + r.status + "). Try again in a moment."); return null; }
+      return r.arrayBuffer();
+    });
+  }
+
+  var game = null, W = 0, H = 0, wheelAcc = 0;
+  function size() {                                       // the game renders at CSS pixels, capped at 1920x1080 (it draws every pixel on the CPU)
+    var w = Math.max(320, Math.floor(innerWidth)), h = Math.max(240, Math.floor(innerHeight));
+    var s = Math.min(1, 1920 / w, 1080 / h); w = Math.floor(w * s); h = Math.floor(h * s);
+    if (w !== W || h !== H) { W = w; H = h; canvas.width = w; canvas.height = h; if (game) game._web_resize(w, h); }
+  }
+  function pos(e) { var r = canvas.getBoundingClientRect(); return [Math.round((e.clientX - r.left) * W / r.width), Math.round((e.clientY - r.top) * H / r.height)]; }
+  var BTN = [1, 4, 2, 5, 6];                               // DOM button -> Windows VK (left, middle, right, back, forward)
+  var PASS = { 122: 1, 123: 1 };                           // F11 (fullscreen) and F12 (devtools) stay the browser's
+
+  function wire() {
+    canvas.addEventListener("mousedown", function (e) { canvas.focus(); var p = pos(e); game._web_button(BTN[e.button] || 1, 1, p[0], p[1]); e.preventDefault(); });
+    addEventListener("mouseup", function (e) { var p = pos(e); game._web_button(BTN[e.button] || 1, 0, p[0], p[1]); });
+    addEventListener("mousemove", function (e) { var p = pos(e); game._web_mouse_move(p[0], p[1]); });
+    canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    canvas.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      wheelAcc += -e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? 800 : 1);
+      while (Math.abs(wheelAcc) >= 100) { var d = wheelAcc > 0 ? 120 : -120; game._web_wheel(d); wheelAcc -= d > 0 ? 100 : -100; }
+    }, { passive: false });
+    addEventListener("keydown", function (e) {
+      if (PASS[e.keyCode]) return;
+      game._web_key(e.keyCode, 1, e.repeat ? 1 : 0); e.preventDefault();
+    });
+    addEventListener("keyup", function (e) { if (PASS[e.keyCode]) return; game._web_key(e.keyCode, 0, 0); e.preventDefault(); });
+    addEventListener("blur", function () { game._web_focus_changed(0); });
+    addEventListener("focus", function () { game._web_focus_changed(1); });
+    addEventListener("resize", size);
+  }
+
+  check().then(function (ok) { return ok ? fetchGame() : null; }).then(function (wasm) {
+    if (!wasm) return;
+    canvas.hidden = false; size();
+    return createTwomoretimes({
+      wasmBinary: wasm,
+      ctx: canvas.getContext("2d", { alpha: false }),
+      onQuit: function () { location.href = "/"; },
+      print: function () {}, printErr: function (t) { console.warn(t); }
+    }).then(function (M) {
+      game = M;
+      M.FS.mkdir("/app");
+      M.FS.mount(M.FS.filesystems.IDBFS, {}, "/app");      // your saves (maps, profiles, controls) live in this browser
+      M.FS.syncfs(true, function () {
+        wire(); gate.remove(); canvas.focus();
+        M._web_start(W, H);
+      });
+    });
+  }).catch(function (err) { console.error(err); say("Something went wrong loading the game."); });
+})();
+</script>
+</body>
+</html>
