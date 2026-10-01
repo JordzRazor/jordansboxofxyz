@@ -4,32 +4,30 @@
 <script data-canonical-host>(function(){var h=location.hostname;if(h!=="jordansboxof.xyz"&&/\.azurestaticapps\.net$/i.test(h)){location.replace("https://jordansboxof.xyz"+location.pathname+location.search+location.hash);}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>the terms · jordansboxofxyz</title>
-<meta name="description" content="Sign in and agree to the terms to download from the shop.">
+<title>Terms and privacy · jordansboxofxyz</title>
+<meta name="description" content="The one agreement behind every game and tool on jordansboxof.xyz: what you may do, what you may not, what is recorded, and your rights.">
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <link rel="stylesheet" href="/css/style.css?v=220c47d9">
 <style>
-  .wrap{ max-width: 52rem; margin: 0 auto; padding: clamp(2rem,5vw,3.2rem) clamp(1.25rem,4vw,3rem) 4rem; }
-  h1{ font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem,4.4vw,2.6rem); margin: 0 0 .6rem; line-height: 1.14; }
-  .lede{ color: var(--paper-dim); max-width: 56ch; margin: 0 0 1.6rem; }
-  .state{ border:1px solid var(--slate-line); border-radius: var(--radius); background: var(--slate-850); padding: 1.1rem 1.3rem; margin: 0 0 1.6rem; }
+  .hero{ min-height: auto; padding-bottom: clamp(2.2rem,5vw,3.4rem); }
+  .wrap{ max-width: 56rem; margin: 0 auto; padding: 0 clamp(1.25rem,4vw,3rem) 4rem; }
+  .state{ border:1px solid var(--slate-line); border-radius: var(--radius); background: var(--slate-850); padding: 1.1rem 1.3rem; margin: 0 0 2rem; }
   .state b{ color: var(--wood-200); }
   .providers{ display:flex; gap:.8rem; flex-wrap:wrap; }
-  .terms{ border:1px solid var(--slate-line); border-radius: var(--radius); background: rgba(20,24,26,0.45); padding: 1.4rem clamp(1rem,3vw,1.8rem); }
-  .terms h2{ font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin: 1.4rem 0 .5rem; color: var(--wood-200); }
-  .terms h2:first-child{ margin-top: 0; }
-  .terms .short{ margin: .8rem 0 0; padding-left: 1.2rem; }
-  .terms .short li{ margin: .35rem 0; color: var(--paper); }
-  .terms .short b{ color: var(--wood-200); font-weight: 600; }
-  .terms details.full{ margin-top: 1.1rem; border-top: 1px dashed var(--slate-line); padding-top: .8rem; }
-  .terms summary{ cursor: pointer; color: var(--blue-200); font-size: .9rem; letter-spacing: .04em; list-style: none; }
-  .terms summary::-webkit-details-marker{ display: none; }
-  .terms summary::before{ content: "▸ "; color: var(--wood-300); }
-  .terms details[open] summary::before{ content: "▾ "; }
-  .terms details h2{ font-size: 1rem; margin: 1.1rem 0 .3rem; }
+  .glance{ display:grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin: 0 0 2rem; padding: 0; list-style: none; }
+  @media (max-width: 640px){ .glance{ grid-template-columns: 1fr; } }
+  .glance li{ border:1px solid var(--slate-line); border-radius: var(--radius); background: rgba(20,24,26,0.45); padding: 1rem 1.1rem; color: var(--paper-dim); font-size: .92rem; }
+  .glance b{ display:block; color: var(--wood-200); font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; margin-bottom: .25rem; }
+  .terms{ border:1px solid var(--slate-line); border-radius: var(--radius); background: rgba(20,24,26,0.45); padding: 1.6rem clamp(1rem,3vw,2rem); counter-reset: clause; }
+  .terms .ver{ color: var(--paper-faint); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
+  .terms h2{ font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; margin: 1.6rem 0 .45rem; color: var(--wood-200); counter-increment: clause; }
+  .terms h2::before{ content: counter(clause) ". "; color: var(--paper-faint); }
   .terms p, .terms li{ color: var(--paper-dim); font-size: .93rem; }
-  .terms .ver{ color: var(--paper-faint); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
-  .agree{ display:flex; gap:.9rem; align-items:flex-start; margin: 1.4rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--slate-line); }
+  .terms ul{ padding-left: 1.2rem; }
+  .terms li{ margin: .3rem 0; }
+  .terms b{ color: var(--paper); font-weight: 600; }
+  .terms a{ color: var(--blue-200); }
+  .agree{ display:flex; gap:.9rem; align-items:flex-start; margin: 1.6rem 0 0; padding-top: 1.2rem; border-top: 1px solid var(--slate-line); }
   .agree input{ width: 1.1rem; height: 1.1rem; margin-top: .2rem; accent-color: var(--wood-400); }
   .agree label{ color: var(--paper); font-size: .95rem; }
   .row{ display:flex; gap:.9rem; align-items:center; flex-wrap:wrap; margin-top: 1.1rem; }
@@ -54,55 +52,93 @@
 </header>
 
 <main>
-<div class="wrap">
-  <p class="eyebrow">約束 · the terms</p>
-  <h1><span class="metal">Look all you like.</span> To take something home, sign in and agree.</h1>
-  <p class="lede">Play and try anything without an account. Downloading asks for one thing: agree, on the record, to the terms.</p>
+  <section class="hero">
+    <div class="hero-canvas-wrap"><canvas id="hero-canvas" aria-hidden="true"></canvas></div>
+    <div class="hero-fade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">約束 · the terms · 誓</p>
+      <h1><span class="metal">One account.</span> One agreement. <em>Everything</em> on the shelf.</h1>
+      <p>Every game and tool here is original work, made by Jordan Asher Young-Noel with Claude. To play or download, sign in and agree to the terms below, once. They are short, they are in plain English, and they protect the work.</p>
+      <ul class="hero-stats">
+        <li><b>Free</b> · nothing here costs anything</li>
+        <li><b>Yours to use</b> · never to copy or pass on</li>
+        <li><b>On the record</b> · your agreement is kept</li>
+      </ul>
+    </div>
+  </section>
 
+<div class="wrap">
   <div class="state" id="state">
     <span class="muted">checking who you are…</span>
   </div>
 
-  <section class="terms" id="terms">
-    <div class="ver">terms · version <span id="ver">2026-09-12</span></div>
+  <ul class="glance" aria-label="The terms at a glance">
+    <li><b>The work is mine</b>Code, games, designs, maps, art and text: © Jordan Asher Young-Noel, all rights reserved. Made with Claude, Anthropic's AI.</li>
+    <li><b>Use it, don't take it</b>Members' games, like twomoretimes, are play-only: on this site, never downloaded. Only the tools offered for download, like Sniper, may be. No copying, sharing, repurposing, re-hosting or reverse-engineering.</li>
+    <li><b>What is recorded</b>Your sign-in account, the terms version, the time, your IP address and browser, and each play and download. Nothing is sold; no ads.</li>
+    <li><b>Your rights</b>See, correct or delete your data by emailing jordanyoungnoel@gmail.com. Governed by the law of England and Wales.</li>
+  </ul>
 
-    <ul class="short">
-      <li><b>Yours to run, read and change</b> for yourself. The source is in the zip.</li>
-      <li><b>Not yours to pass on</b>: no redistributing, publishing, selling, or lifting code, designs or text into other projects.</li>
-      <li><b>On the record</b>: your sign-in account, this terms version, the time, your address and browser; each download the same. Kept as long as the copyright is, which is long.</li>
+  <section class="terms" id="terms">
+    <div class="ver">terms of use and privacy notice · version <span id="ver">2026-10-01</span></div>
+
+    <h2>Who I am</h2>
+    <p>This site, <b>jordansboxof.xyz</b>, and everything on it are made and run by <b>Jordan Asher Young-Noel</b>, trading as <b>youspiritually</b> ("I", "me"). For anything about these terms or your data, write to <a href="mailto:jordanyoungnoel@gmail.com">jordanyoungnoel@gmail.com</a>.</p>
+
+    <h2>The agreement</h2>
+    <p>These terms are an agreement between you and me. You accept them by ticking the box below while signed in; that acceptance is what lets you play the members' games and download the tools. You must be <b>13 or older</b>. If you are under 18, please make sure a parent or guardian knows you are agreeing to them.</p>
+
+    <h2>Who owns the work</h2>
+    <p>All of it &mdash; software, source code, compiled code, games, physics and rendering, maps and tracks I publish, designs, graphics, text and this site &mdash; is <b>© Jordan Asher Young-Noel. All rights reserved.</b> It was made with <b>Claude</b>, Anthropic's AI model; that credit describes how the work was made and gives no one else any right in it. Nothing in these terms transfers ownership to you. Copyright notices and credits must stay where they are.</p>
+
+    <h2>What you may do</h2>
+    <p>While you keep to these terms, I give you a personal, non-exclusive, non-transferable licence, which I may withdraw, to:</p>
+    <ul>
+      <li><b>Play-only works</b> &mdash; the members' games, such as <b>twomoretimes</b>: play them on this site, in your own browser, for your own enjoyment. That is all. They are <b>not offered for download in any form</b>: no executable, desktop, offline or source version of them is licensed to you, and these terms give you no right to obtain, keep or run a copy of one anywhere else.</li>
+      <li><b>Downloadable programs</b> &mdash; only those offered for download on their own page, such as <b>Sniper</b>: download, install and run them, read their source code where it is included, and change them for your own use on your own devices.</li>
     </ul>
-    <details class="full">
-      <summary>the full terms</summary>
-      <h2>Whose it is</h2>
-      <p>Everything you can download here is the work and property of <b><a href="https://www.reddit.com/r/youspiritually/" target="_blank" rel="noopener noreferrer">youspiritually</a></b>, built with Claude. All rights reserved, for as long as copyright lasts.</p>
-      <h2>What you may do</h2>
-      <ul>
-        <li>Download it, install it, run it, use it for your own work.</li>
-        <li>Read every line of the source.</li>
-        <li>Change it for your own use, on your own machines.</li>
-      </ul>
-      <h2>What you may not do</h2>
-      <ul>
-        <li>Redistribute it, in whole or in part, in any form: zip, binaries or source, original or modified.</li>
-        <li>Publish it, sell it, or offer it as your own or as part of another product or project.</li>
-        <li>Copy code, designs or text out of it into other software, open source or not.</li>
-        <li>Remove or alter the notices of who made it.</li>
-      </ul>
-      <p>Source you can read is not source you own. Source-available, not open source.</p>
-      <h2>The record</h2>
-      <p>Ticking the box writes down the account you signed in with (provider, id, and the name or email it gives us), the terms version shown, the time, your network address and browser. Each download is written down the same way. The record is kept as long as copyright in the work subsists, and it is how a breach gets traced.</p>
-      <h2>If the terms are broken</h2>
-      <p>Your permission ends, the record is evidence, and nothing here limits any other right the author has.</p>
-      <h2>No promises</h2>
-      <p>Provided as it is. It reads the page you point it at and writes files where you tell it to. Keep backups; it does.</p>
-      <h2>Changes</h2>
-      <p>New terms get a new version and ask for a new agreement. Old acceptances stay on record.</p>
-    </details>
+    <p>Whether a work is play-only or downloadable is decided by me and shown on its page. Anything not offered for download is play-only.</p>
+    <p>Tracks, settings and saves you make yourself are yours. They are kept in your own browser or on your own machine.</p>
+
+    <h2>What you may not do</h2>
+    <ul>
+      <li>Copy, share, redistribute, publish, sell, rent or sublicense any of the work, in whole or in part, in any form &mdash; original or modified, source or compiled.</li>
+      <li>Download, extract, save, decompile, disassemble or reverse-engineer a play-only work's code or data; obtain, keep, run or pass on any executable, desktop or offline version of one, however it reached you; or host it anywhere else.</li>
+      <li>Repurpose, adapt, port, clone or build on any of the work &mdash; its code, physics, rendering, levels, art, design or the way it plays &mdash; to make something else.</li>
+      <li>Copy code, designs, assets or text out of the work into any other project or product, open source or not.</li>
+      <li>Use the work, or anything taken from it, to build, train or test AI models or datasets.</li>
+      <li>Get around the sign-in, the terms or any other access control, or let anyone else use your account.</li>
+      <li>Remove or change any copyright notice, credit or mark of who made the work.</li>
+    </ul>
+    <p>These restrictions apply except where the law gives you a right that a contract cannot take away.</p>
+
+    <h2>What is recorded, and why</h2>
+    <p>I am the controller of the personal data described here.</p>
+    <ul>
+      <li><b>What:</b> the account you sign in with (GitHub, Google or Microsoft: the provider, your account id, and the name or email address it gives me); the version of these terms you accepted and when; your IP address and browser details at that moment; and the same details each time you play a members' game or download a file.</li>
+      <li><b>Why:</b> to provide the games and downloads under this agreement, and to prove who agreed to what, so that the work's copyright and these terms can be enforced. The legal bases are performing our agreement and my legitimate interest in protecting my work.</li>
+      <li><b>Where:</b> stored in Microsoft Azure. GitHub, Google and Microsoft handle the sign-in itself under their own privacy policies. Game saves, tracks and settings stay in your browser and are never sent to me.</li>
+      <li><b>Never:</b> sold, shared for marketing, or used for advertising. There are no ads and no third-party trackers.</li>
+      <li><b>How long:</b> while your account is in use, and for six years after your last sign-in &mdash; the period in which a claim under this agreement can be brought &mdash; or longer only if it is needed for a claim already under way. Then it is deleted.</li>
+      <li><b>Your rights:</b> you can ask to see, correct or delete your data, to restrict or object to its use, or to take a copy with you, by emailing <a href="mailto:jordanyoungnoel@gmail.com">jordanyoungnoel@gmail.com</a>. Deleting your acceptance ends your access. If you are unhappy with how your data is handled, you can complain to the Information Commissioner's Office (<a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a>).</li>
+    </ul>
+
+    <h2>Ending</h2>
+    <p>If you break these terms, your licence ends straight away, you must stop using the work and delete any copies you have, and I may close your access. You can stop at any time, and ask me to delete your data as described above. The record of your agreement may be used as evidence of what was agreed.</p>
+
+    <h2>No guarantees</h2>
+    <p>Everything here is free and provided as it is, without any promise that it will work for a particular purpose, without errors or without interruption. Downloaded tools write files where you tell them to: keep backups. As far as the law allows, I am not liable for any indirect or consequential loss, or for loss of data. Nothing in these terms limits liability for death or personal injury caused by negligence, for fraud, or for anything else the law does not allow to be limited, and nothing affects your legal rights as a consumer.</p>
+
+    <h2>Changes</h2>
+    <p>If these terms change, they get a new version, and you will be asked to agree again before you play or download. Earlier agreements stay on record, kept as described above.</p>
+
+    <h2>Law</h2>
+    <p>These terms are governed by the law of England and Wales, and the courts of England and Wales have jurisdiction. If you live in Scotland or Northern Ireland, you may also bring proceedings in your local courts.</p>
 
     <div class="agree" id="agree" hidden>
       <input type="checkbox" id="tick">
-      <label for="tick">I have read the terms above, I agree to them, and I understand that my
-      agreement and my downloads are recorded under the account I signed in with.</label>
+      <label for="tick">I am 13 or older, I have read these terms, and I agree to them. I understand that my agreement, and each
+      play and download, are recorded under the account I signed in with, as described in section 6.</label>
     </div>
     <div class="row" id="go" hidden>
       <button class="btn" id="continue" type="button" disabled>Agree and continue</button>
@@ -113,17 +149,19 @@
 </main>
 
 <footer class="site-footer">
-  <span>© <span id="year"></span> <a href="https://www.reddit.com/r/youspiritually/" target="_blank" rel="noopener noreferrer">youspiritually</a>. Built with Claude. All rights reserved.</span>
+  <span>© <span id="year"></span> Jordan Asher Young-Noel, trading as <a href="https://www.reddit.com/r/youspiritually/" target="_blank" rel="noopener noreferrer">youspiritually</a>. All rights reserved. Made with Claude.</span>
   <span><a href="/">← back to the shop</a></span>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="/js/main.js"></script>
 <script src="/js/auth.js"></script>
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 
 const params = new URLSearchParams(location.search);
-const next = params.get('next') || '/sniper/';
-const safeNext = /^\/[^\/\\]/.test(next) ? next : '/sniper/';
+const next = params.get('next') || '/';
+const safeNext = /^\/(?![\/\\])/.test(next) ? next : '/';
 const state = document.getElementById('state');
 const agree = document.getElementById('agree');
 const go = document.getElementById('go');
@@ -138,9 +176,10 @@ fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
   document.getElementById('ver').textContent = me.terms;
   if (!me.signedIn) {
     state.innerHTML = '<p style="margin:0 0 .9rem"><b>Step one:</b> sign in. No password is made here — '
-      + 'GitHub or Microsoft vouches for you, and this site keeps only the account id and the name it hands over.</p>'
+      + 'GitHub, Google or Microsoft confirms who you are, and this site keeps only what section 6 lists.</p>'
       + '<div class="providers">'
-      + '<a class="btn" href="/.auth/login/github?post_login_redirect_uri=' + back + '">Sign in with GitHub</a>'
+      + '<a class="btn" href="/.auth/login/google?post_login_redirect_uri=' + back + '">Sign in with Google</a>'
+      + '<a class="btn ghost" href="/.auth/login/github?post_login_redirect_uri=' + back + '">Sign in with GitHub</a>'
       + '<a class="btn ghost" href="/.auth/login/aad?post_login_redirect_uri=' + back + '">Sign in with Microsoft</a>'
       + '</div>';
     return;
@@ -152,7 +191,7 @@ fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
     return;
   }
   state.innerHTML = '<p style="margin:0"><b>Step two:</b> you are signed in as ' + esc(me.name || me.provider)
-    + '. Read the terms, tick the box, continue.</p>';
+    + '. Read the terms below, tick the box at the end, and continue.</p>';
   agree.hidden = false;
   go.hidden = false;
   tick.addEventListener('change', () => { btn.disabled = !tick.checked; });
