@@ -33,7 +33,8 @@ app.http("play", {
     if (!acc) return S.json(403, { error: "agree to the terms first", terms, version: S.TERMS_VERSION });
 
     const blob = S.blobService().getContainerClient(PLAY_CONTAINER).getBlockBlobClient(game + ".wasm");
-    if (!(await blob.exists())) return S.json(404, { error: "no such game: " + game });
+    let size;
+    try { size = (await blob.getProperties()).contentLength; } catch { return S.json(404, { error: "no such game: " + game }); }
 
     // The play log: who played what, when. Part of the same record.
     try {
@@ -53,7 +54,8 @@ app.http("play", {
 
     // The game carries the Free Rider library (~31 MB raw): send the gzipped copy (<name>.wasm.gz, ~7 MB, uploaded beside it) to any
     // browser that takes gzip -- it unpacks it itself, the page sees the same bytes. The plain .wasm stays as the fallback.
-    const headers = { "Content-Type": "application/wasm", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Accept-Encoding" };
+    const headers = { "Content-Type": "application/wasm", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Accept-Encoding",
+                      "X-Game-Bytes": String(size) };   // the unpacked size: what the page's progress bar fills against
     let src = blob;
     if (/\bgzip\b/.test(req.headers.get("accept-encoding") || "")) {
       const gz = S.blobService().getContainerClient(PLAY_CONTAINER).getBlockBlobClient(game + ".wasm.gz");

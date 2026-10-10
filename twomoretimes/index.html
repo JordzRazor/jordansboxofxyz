@@ -17,11 +17,17 @@
   #gate a.btn { display: inline-block; margin-top: .8rem; padding: .55rem 1.2rem; border: 1px solid #ffb347; color: #ffb347; text-decoration: none; }
   #gate a.btn:hover { background: #3a2a10; }
   #gate a.home { color: #5a78a8; font-size: .85rem; }
+  #bar { height: 8px; margin: 1rem 0 .3rem; border: 1px solid #3a5a88; background: #0b0e14; overflow: hidden; }
+  #bar i { display: block; height: 100%; width: 0; background: #5cffb0; transition: width .2s linear; }
+  #bar.wait i { width: 30%; animation: wait 1.3s ease-in-out infinite; }   /* the server is still getting the game ready: no bytes yet */
+  @keyframes wait { from { transform: translateX(-110%); } to { transform: translateX(340%); } }
+  @media (prefers-reduced-motion: reduce) { #bar.wait i { animation: none; width: 100%; opacity: .35; } }
+  #sub { margin: 0; font-size: .85rem; color: #5a78a8; min-height: 1.4em; }
 </style>
 </head>
 <body>
 <canvas id="game" tabindex="0" hidden></canvas>
-<div id="gate"><div class="box"><h1>TWOMORETIMES</h1><p id="msg">Loading…</p><div id="act"></div></div></div>
+<div id="gate"><div class="box"><h1>TWOMORETIMES</h1><p id="msg">Loading…</p><div id="bar" hidden><i></i></div><p id="sub"></p><div id="act"></div></div></div>
 <script src="twomoretimes.js"></script>
 <script>
 // twomoretimes in the browser: the same C++ game (physics, renderer, menus) compiled to WebAssembly. It draws its own frame into memory;
@@ -33,9 +39,11 @@
   var HERE = "/twomoretimes/";
   var gate = document.getElementById("gate"), msg = document.getElementById("msg"), act = document.getElementById("act");
   var canvas = document.getElementById("game");
+  var bar = document.getElementById("bar"), fill = bar.firstChild, sub = document.getElementById("sub");
 
   function say(text, link, label) {
     msg.textContent = text;
+    bar.hidden = true; sub.textContent = "";
     act.innerHTML = "";
     if (link) { var a = document.createElement("a"); a.className = "btn"; a.href = link; a.textContent = label; act.appendChild(a); }
     var h = document.createElement("p"); h.innerHTML = '<a class="home" href="/">← jordansboxof.xyz</a>'; act.appendChild(h);
@@ -60,13 +68,37 @@
     for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i);
     return u.buffer;
   }
+  // THE PROGRESS BAR. Two waits: first the server fetches the game out of storage (nothing arrives yet: the bar slides), then the bytes
+  // come in (the bar fills). The size to fill against is X-Game-Bytes from /api/play -- the game's real size: the download itself is
+  // gzipped, so Content-Length is the smaller compressed figure while the reader counts unpacked bytes.
+  function mb(n) { return (n / 1048576).toFixed(n < 10485760 ? 1 : 0); }
+  function progress(got, total) {
+    bar.classList.toggle("wait", !total);
+    if (total) fill.style.width = Math.min(100, 100 * got / total).toFixed(1) + "%";
+    sub.textContent = total ? mb(got) + " of " + mb(total) + " MB" : mb(got) + " MB";
+  }
+  function readAll(r, total) {                             // the body chunk by chunk, so the bar can move; then one buffer
+    if (!r.body || !r.body.getReader) return r.arrayBuffer();
+    var reader = r.body.getReader(), parts = [], got = 0;
+    function pump() {
+      return reader.read().then(function (x) {
+        if (x.done) { var out = new Uint8Array(got), o = 0; parts.forEach(function (p) { out.set(p, o); o += p.length; }); return out.buffer; }
+        parts.push(x.value); got += x.value.length; progress(got, total);
+        return pump();
+      });
+    }
+    return pump();
+  }
   function fetchGame() {
     stage = "downloading the game"; msg.textContent = "Loading the game…"; act.innerHTML = "";
+    bar.hidden = false; bar.classList.add("wait"); fill.style.width = ""; sub.textContent = "Getting it ready…";
     return fetch(GAME_URL, { cache: "no-store", credentials: "same-origin" }).then(function (r) {
       if (r.status === 401 || r.status === 403) { say("Sign in and agree to the terms to play.", TERMS, "Continue"); return null; }
       if (!r.ok) { say("The game could not be loaded (HTTP " + r.status + "). Try again in a moment."); return null; }
       var type = r.headers.get("content-type") || "";
-      return (/wasm|octet-stream/.test(type) ? r.arrayBuffer() : r.text().then(b64bytes)).then(function (buf) {
+      var total = +r.headers.get("x-game-bytes") || (r.headers.get("content-encoding") ? 0 : +r.headers.get("content-length") || 0);
+      progress(0, total);
+      return (/wasm|octet-stream/.test(type) ? readAll(r, total) : r.text().then(b64bytes)).then(function (buf) {
         var b = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));   // every WebAssembly module starts "\0asm"
         if (b.length < 4 || b[0] !== 0 || b[1] !== 0x61 || b[2] !== 0x73 || b[3] !== 0x6d)
           throw new Error("the download is not the game (" + buf.byteLength + " bytes of " + (type || "unknown type") + ")");
@@ -108,6 +140,7 @@
   check().then(function (ok) { return ok ? fetchGame() : null; }).then(function (wasm) {
     if (!wasm) return;
     stage = "starting the game"; msg.textContent = "Starting…";
+    bar.classList.remove("wait"); fill.style.width = "100%"; sub.textContent = "Unpacking the tracks…";
     canvas.hidden = false; size();
     return createTwomoretimes({
       // hand the loader the game we fetched. NOT `wasmBinary`: this Emscripten no longer reads it from the page and silently
