@@ -51,11 +51,15 @@ app.http("play", {
       ctx.warn("play log failed: " + e.message);
     }
 
-    const body = await blob.downloadToBuffer();
-    return {
-      status: 200,
-      body,
-      headers: { "Content-Type": "application/wasm", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" },
-    };
+    // The game carries the Free Rider library (~31 MB raw): send the gzipped copy (<name>.wasm.gz, ~7 MB, uploaded beside it) to any
+    // browser that takes gzip -- it unpacks it itself, the page sees the same bytes. The plain .wasm stays as the fallback.
+    const headers = { "Content-Type": "application/wasm", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Accept-Encoding" };
+    let src = blob;
+    if (/\bgzip\b/.test(req.headers.get("accept-encoding") || "")) {
+      const gz = S.blobService().getContainerClient(PLAY_CONTAINER).getBlockBlobClient(game + ".wasm.gz");
+      if (await gz.exists()) { src = gz; headers["Content-Encoding"] = "gzip"; }
+    }
+    const body = await src.downloadToBuffer();
+    return { status: 200, body, headers };
   },
 });
