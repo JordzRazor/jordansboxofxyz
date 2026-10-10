@@ -43,7 +43,6 @@ app.http("play", {
         rowKey: new Date().toISOString() + "-" + game,
         game,
         provider: p.provider,
-        name: p.name,
         ip: S.ipOf(req),
         userAgent: req.headers.get("user-agent") || "",
         termsVersion: S.TERMS_VERSION,

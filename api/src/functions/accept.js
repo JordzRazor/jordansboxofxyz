@@ -1,7 +1,8 @@
 // POST /api/accept   {"agree": true, "version": "<terms version shown>"}
 //
-// Writes the acceptance record: which identity, from which provider, what
-// they were shown (version), when, from where. One row per identity per
+// Writes the acceptance record: which identity (the anonymous id, never the
+// email or name), from which provider, what they were shown (version), when,
+// from where. One row per identity per
 // terms version; accepting again overwrites with the newer time.
 
 "use strict";
@@ -30,7 +31,6 @@ app.http("accept", {
       rowKey: S.TERMS_VERSION,
       provider: p.provider,
       userId: p.id,
-      name: p.name,
       acceptedUtc: when,
       ip: S.ipOf(req),
       userAgent: req.headers.get("user-agent") || "",

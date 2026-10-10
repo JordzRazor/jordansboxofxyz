@@ -6,6 +6,12 @@
 // private blob container for the downloads and two tables, one for the
 // acceptance ledger and one for the download log.
 //
+// No email address or name is ever written to a table (terms 2026-10-10):
+// `name` is the provider's userDetails -- the email address for Google and
+// Microsoft -- and it only goes back to the signed-in person's own page.
+// Records are keyed by who(p): the provider plus Static Web Apps' own
+// anonymous userId.
+//
 // Nothing here trusts the page. The file name is validated, the terms
 // version is compared against the one the server knows, and the only thing a
 // signed-in user can obtain is a link to a blob that expires in minutes.

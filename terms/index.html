@@ -75,12 +75,12 @@
   <ul class="glance" aria-label="The terms at a glance">
     <li><b>The work is mine</b>Code, games, designs, maps, art and text: © Jordan, all rights reserved. Made with Claude, Anthropic's AI.</li>
     <li><b>Use it, don't take it</b>Members' games, like twomoretimes, are play-only: on this site, never downloaded. Only the tools offered for download, like Sniper, may be. No copying, sharing, repurposing, re-hosting or reverse-engineering.</li>
-    <li><b>What is recorded</b>Your sign-in account, the terms version, the time, your IP address and browser, and each play and download. Nothing is sold; no ads.</li>
+    <li><b>What is recorded</b>Which service you signed in with and an anonymous record id, the terms version, the time, your IP address and browser, and each play and download. <b>Never your email address or name.</b> Nothing is sold; no ads.</li>
     <li><b>Your rights</b>See, correct or delete your data by emailing jordanyoungnoel@gmail.com. Governed by the law of England and Wales.</li>
   </ul>
 
   <section class="terms" id="terms">
-    <div class="ver">terms of use and privacy notice · version <span id="ver">2026-10-01</span></div>
+    <div class="ver">terms of use and privacy notice · version <span id="ver">2026-10-10</span></div>
 
     <h2>Who I am</h2>
     <p>This site, <b>jordansboxof.xyz</b>, and everything on it are made and run by <b>Jordan</b>, trading as <b>youspiritually</b> ("I", "me"). For anything about these terms or your data, write to <a href="mailto:jordanyoungnoel@gmail.com">jordanyoungnoel@gmail.com</a>.</p>
@@ -115,12 +115,13 @@
     <h2>What is recorded, and why</h2>
     <p>I am the controller of the personal data described here.</p>
     <ul>
-      <li><b>What:</b> the account you sign in with (GitHub, Google or Microsoft: the provider, your account id, and the name or email address it gives me); the version of these terms you accepted and when; your IP address and browser details at that moment; and the same details each time you play a members' game or download a file.</li>
+      <li><b>What:</b> which service you signed in with (GitHub, Google or Microsoft) and the anonymous record id this site is given for your account; the version of these terms you accepted and when; your IP address and browser details at that moment; and the same details each time you play a members' game or download a file.</li>
+      <li><b>Not your email address or name:</b> the sign-in service passes them to this site so the page can say who you are signed in as, but they are <b>never written down</b> &mdash; not with your agreement, not with your plays or downloads, and not in my own statistics. Records made before 10 October 2026 had them, and they have been removed.</li>
       <li><b>Why:</b> to provide the games and downloads under this agreement, and to prove who agreed to what, so that the work's copyright and these terms can be enforced. The legal bases are performing our agreement and my legitimate interest in protecting my work.</li>
       <li><b>Where:</b> stored in Microsoft Azure. GitHub, Google and Microsoft handle the sign-in itself under their own privacy policies. Game saves, tracks and settings stay in your browser and are never sent to me.</li>
       <li><b>Never:</b> sold, shared for marketing, or used for advertising. There are no ads and no third-party trackers.</li>
       <li><b>How long:</b> while your account is in use, and for six years after your last sign-in &mdash; the period in which a claim under this agreement can be brought &mdash; or longer only if it is needed for a claim already under way. Then it is deleted.</li>
-      <li><b>Your rights:</b> you can ask to see, correct or delete your data, to restrict or object to its use, or to take a copy with you, by emailing <a href="mailto:jordanyoungnoel@gmail.com">jordanyoungnoel@gmail.com</a>. Deleting your acceptance ends your access. If you are unhappy with how your data is handled, you can complain to the Information Commissioner's Office (<a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a>).</li>
+      <li><b>Your rights:</b> you can ask to see, correct or delete your data, to restrict or object to its use, or to take a copy with you, by emailing <a href="mailto:jordanyoungnoel@gmail.com">jordanyoungnoel@gmail.com</a>. Because your email address is not kept, include your <b>record id</b> &mdash; it is shown at the top of this page while you are signed in. Deleting your acceptance ends your access. If you are unhappy with how your data is handled, you can complain to the Information Commissioner's Office (<a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a>).</li>
     </ul>
 
     <h2>Ending</h2>
@@ -171,6 +172,7 @@ const msg = document.getElementById('msg');
 const back = encodeURIComponent('/terms/?next=' + encodeURIComponent(safeNext));
 
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function recId(me) { return me.record ? '<span class="muted">Your record id: <code>' + esc(me.record) + '</code></span> ' : ''; }   // (quote it to see or delete your data: no email is kept to find you by)
 
 fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
   document.getElementById('ver').textContent = me.terms;
@@ -186,12 +188,12 @@ fetch('/api/me', { cache: 'no-store' }).then(r => r.json()).then(me => {
   }
   if (me.accepted) {
     state.innerHTML = '<p style="margin:0"><b>You are in.</b> Signed in as ' + esc(me.name || me.provider)
-      + ', agreed on ' + esc((me.acceptedUtc || '').slice(0, 10)) + '. '
+      + ', agreed on ' + esc((me.acceptedUtc || '').slice(0, 10)) + '. ' + recId(me)
       + '<a class="btn" style="margin-left:.8rem" href="' + esc(safeNext) + '">Continue</a></p>';
     return;
   }
   state.innerHTML = '<p style="margin:0"><b>Step two:</b> you are signed in as ' + esc(me.name || me.provider)
-    + '. Read the terms below, tick the box at the end, and continue.</p>';
+    + '. Read the terms below, tick the box at the end, and continue. ' + recId(me) + '</p>';
   agree.hidden = false;
   go.hidden = false;
   tick.addEventListener('change', () => { btn.disabled = !tick.checked; });

@@ -16,7 +16,8 @@ app.http("me", {
     return S.json(200, {
       signedIn: true,
       provider: p.provider,
-      name: p.name,
+      name: p.name,                                 // (shown to them, never stored)
+      record: S.who(p),                             // the anonymous id their records are kept under: what they quote to see or delete them
       accepted: Boolean(acc),
       acceptedUtc: acc ? acc.acceptedUtc : null,
       terms: S.TERMS_VERSION,
